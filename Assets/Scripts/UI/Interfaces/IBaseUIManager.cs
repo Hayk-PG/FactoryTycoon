@@ -4,7 +4,7 @@ public interface IBaseUIManager
 {
     object[] Data { get; set; }
 
-    event Action<TabType, ITab, bool, object[]> OnTabChanged;
+    event Action<TabType, ITabManager, bool, object[]> OnTabChanged;
 
-    void RaiseEvent(TabType targetTabType, ITab linkedTab, bool activate = true, object[] data = null);
+    void RaiseEvent(TabType targetTabType, ITabManager linkedTab, bool activate = true, object[] data = null);
 }

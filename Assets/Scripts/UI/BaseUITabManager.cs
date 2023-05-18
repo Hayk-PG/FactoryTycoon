@@ -1,7 +1,7 @@
 using UnityEngine;
 using Pautik;
 
-public class BaseUITab : MonoBehaviour, ITab
+public class BaseUITabManager : MonoBehaviour, ITabManager
 {
     [Header("UI Elements")]
     [SerializeField] protected CanvasGroup _canvasGroup;
@@ -12,7 +12,7 @@ public class BaseUITab : MonoBehaviour, ITab
     protected IBaseUIManager _iBaseUIManager;
     protected object[] _data;
 
-    public ITab ObserverTab { get; set; }
+    public ITabManager ObserverTab { get; set; }
     
     
     
@@ -49,7 +49,7 @@ public class BaseUITab : MonoBehaviour, ITab
     /// <summary>
     /// Handle the tab changed event from the base UI manager.
     /// </summary>
-    protected virtual void OnTabChanged(TabType targetTabType, ITab linkedTab, bool activate, object[] data)
+    protected virtual void OnTabChanged(TabType targetTabType, ITabManager linkedTab, bool activate, object[] data)
     {
         if (!IsCurrentTab(targetTabType))
         {
@@ -95,7 +95,7 @@ public class BaseUITab : MonoBehaviour, ITab
     /// Assigns the current tab as an observer to the linked tab, establishing a one-way communication relationship.
     /// The current tab will receive updates and notifications from the linked tab.
     /// </summary>
-    protected virtual void BecomeObserverTab(ITab linkedTab)
+    protected virtual void BecomeObserverTab(ITabManager linkedTab)
     {
         linkedTab.ObserverTab = this;
     }
