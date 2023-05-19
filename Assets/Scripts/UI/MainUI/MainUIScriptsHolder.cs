@@ -9,7 +9,7 @@ public class MainUIScriptsHolder : MonoBehaviour
 {
     [SerializeField] MainUIController mainUIController;
     [SerializeField] SceneTransition sceneTransition;
-    [SerializeField] SaveLoadGameobjects saveLoadGameObjects;
+    [SerializeField] GameObjectsPersistenceManager saveLoadGameObjects;
     [SerializeField] MainMenuButtons mainMenuButtons;
     [SerializeField] NewGameScript newGameScript;
     [SerializeField] AutoSaveGameObjectsData autoSave;
@@ -17,7 +17,7 @@ public class MainUIScriptsHolder : MonoBehaviour
  
     internal MainUIController MainUIController => mainUIController;
     internal SceneTransition SceneTransition => sceneTransition;
-    internal SaveLoadGameobjects SaveLoadGameObjects => saveLoadGameObjects;
+    internal GameObjectsPersistenceManager SaveLoadGameObjects => saveLoadGameObjects;
     internal MainMenuButtons MainMenuButtons => mainMenuButtons;
     internal NewGameScript NewGameScript => newGameScript;
     internal AutoSaveGameObjectsData AutoSave => autoSave;

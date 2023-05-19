@@ -53,7 +53,7 @@ public class MainUIController : MonoBehaviour
 
         IEnumerator ChangeSceneCoroutine = mainScriptsHolder.SceneTransition.TransitionCoroutine(null, 2, mainScriptsHolder.SceneTransition.GameScene, 1, () => {
             if (FindObjectOfType<InstantiateGroundTiles>() != null) {
-                mainScriptsHolder.SaveLoadGameObjects.LoadObjs();
+                mainScriptsHolder.SaveLoadGameObjects.LoadObject();
                 mainScriptsHolder.AutoSave.AutoLoad_AutoSavedGameObjectsData();
             }
         });
@@ -64,7 +64,7 @@ public class MainUIController : MonoBehaviour
 
     void MainMenuButtons_OnClickSaveButton() {
 
-        mainScriptsHolder.SaveLoadGameObjects.SaveObjs();
+        mainScriptsHolder.SaveLoadGameObjects.SaveObject();
     }
 
 

@@ -92,16 +92,16 @@ public class ObjectsHolder : MonoBehaviour {
     }
 
     [Header("UI")]
-    [SerializeField] SaveLoadGameobjects saveLoadGameobjects;
+    [SerializeField] GameObjectsPersistenceManager saveLoadGameobjects;
 
     /// <summary>
     /// Main class for loadig saved gameobjects from json
     /// </summary>
-    public SaveLoadGameobjects SaveLoadGameobjects {
+    public GameObjectsPersistenceManager SaveLoadGameobjects {
         get {
             if(saveLoadGameobjects == null) {
-                if(FindObjectOfType<SaveLoadGameobjects>() != null) {
-                    saveLoadGameobjects = FindObjectOfType<SaveLoadGameobjects>();
+                if(FindObjectOfType<GameObjectsPersistenceManager>() != null) {
+                    saveLoadGameobjects = FindObjectOfType<GameObjectsPersistenceManager>();
                 }
             }
             return saveLoadGameobjects;
@@ -129,8 +129,8 @@ public class ObjectsHolder : MonoBehaviour {
     void AddSavableComponentToAllSpawnableOrSavableGameObjects() {
 
         foreach (var obj in SavableGameObjects) {
-            if (obj.GetComponent<SavableGameObjects>() == null) {
-                obj.gameObject.AddComponent<SavableGameObjects>();
+            if (obj.GetComponent<SavableGameObject>() == null) {
+                obj.gameObject.AddComponent<SavableGameObject>();
             }
         }
     }

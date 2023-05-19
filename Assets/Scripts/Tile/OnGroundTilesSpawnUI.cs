@@ -12,7 +12,7 @@ public class OnGroundTilesSpawnUI : MonoBehaviour
     public bool isOpened;
     public bool useUpdateMethod = true;
 
-    SaveLoadGameobjects saveLoadGameObjects;//Controller for saving or loading savable gameobjects
+    GameObjectsPersistenceManager saveLoadGameObjects;//Controller for saving or loading savable gameobjects
 
     void Awake() {
 

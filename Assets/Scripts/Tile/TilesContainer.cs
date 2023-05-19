@@ -6,7 +6,7 @@ using UnityEngine;
 public class TilesContainer : MonoBehaviour
 {
     OnGroundTilesSpawnUI tilesSpawnUI;
-    SaveLoadGameobjects saveLoadGameobjects;
+    GameObjectsPersistenceManager saveLoadGameobjects;
 
     [Header("Tiles")]
     [SerializeField] List<GroundTile> childTiles = new List<GroundTile>();
