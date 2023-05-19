@@ -1,6 +1,6 @@
 using System;
 
-public interface IBaseUIManager 
+public interface IHUDManager 
 {
     object[] Data { get; set; }
 

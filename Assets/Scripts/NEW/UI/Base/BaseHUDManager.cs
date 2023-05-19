@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class BaseUIManager : MonoBehaviour, IBaseUIManager
+public class BaseHUDManager : MonoBehaviour, IHUDManager
 {
     public object[] Data { get; set; }
 

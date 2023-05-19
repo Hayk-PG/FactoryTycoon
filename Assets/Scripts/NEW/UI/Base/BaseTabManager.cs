@@ -1,7 +1,7 @@
 using UnityEngine;
 using Pautik;
 
-public class BaseUITabManager : MonoBehaviour, ITabManager
+public class BaseTabManager : MonoBehaviour, ITabManager
 {
     [Header("UI Elements")]
     [SerializeField] protected CanvasGroup _canvasGroup;
@@ -9,7 +9,7 @@ public class BaseUITabManager : MonoBehaviour, ITabManager
     [Header("Tab Configuration")] 
     [SerializeField] protected TabType _currentTabType;
 
-    protected IBaseUIManager _iBaseUIManager;
+    protected IHUDManager _hudManager;
     protected object[] _data;
 
     public ITabManager ObserverTab { get; set; }
@@ -19,35 +19,35 @@ public class BaseUITabManager : MonoBehaviour, ITabManager
     
     protected virtual void Awake()
     {
-        GetBaseUIManager();
+        GetBaseHUDManager();
     }
 
     protected virtual void OnEnable()
     {
-        SubscribeToBaseUIManager();
+        SubscribeToBaseHUDManager();
     }
 
     /// <summary>
-    /// Get the reference to the base UI manager.
+    /// Get the reference to the base HUD manager.
     /// </summary>
-    protected void GetBaseUIManager()
+    protected void GetBaseHUDManager()
     {
-        _iBaseUIManager = Get<IBaseUIManager>.From(gameObject);
+        _hudManager = Get<IHUDManager>.From(gameObject);
     }
 
     /// <summary>
-    /// Subscribe to the tab changed event of the base UI manager.
+    /// Subscribe to the tab changed event of the base HUD manager.
     /// </summary>
-    protected virtual void SubscribeToBaseUIManager()
+    protected virtual void SubscribeToBaseHUDManager()
     {
-        if (_iBaseUIManager != null)
+        if (_hudManager != null)
         {
-            _iBaseUIManager.OnTabChanged += OnTabChanged;
+            _hudManager.OnTabChanged += OnTabChanged;
         }
     }
 
     /// <summary>
-    /// Handle the tab changed event from the base UI manager.
+    /// Handle the tab changed event from the base HUD manager.
     /// </summary>
     protected virtual void OnTabChanged(TabType targetTabType, ITabManager linkedTab, bool activate, object[] data)
     {
@@ -105,7 +105,7 @@ public class BaseUITabManager : MonoBehaviour, ITabManager
     /// </summary>
     protected virtual void ChangeTab(TabType targetTabType, bool activate = true, object[] data = null)
     {
-        _iBaseUIManager.RaiseEvent(targetTabType, this, activate, data);
+        _hudManager.RaiseEvent(targetTabType, this, activate, data);
     }
 
     /// <summary>
