@@ -36,16 +36,16 @@ public class Btn_Icon : MonoBehaviour
 
     private void OnEnable()
     {
-        _btn.onSelect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
+        _btn.OnSelect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
 
-        _btn.onDeselect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtReleased, _clrReleased); };
+        _btn.OnDeselect += delegate { ChangeIconLook(_btn._buttonClickType, _sprtReleased, _clrReleased); };
     }
 
     private void OnDisable()
     {
-        _btn.onSelect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
+        _btn.OnSelect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtPressed, _clrPressed); };
 
-        _btn.onDeselect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtReleased, _clrReleased); };
+        _btn.OnDeselect -= delegate { ChangeIconLook(_btn._buttonClickType, _sprtReleased, _clrReleased); };
     }
 
     private void CacheIconDefaultLook()

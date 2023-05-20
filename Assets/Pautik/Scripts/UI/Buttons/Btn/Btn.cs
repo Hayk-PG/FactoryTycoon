@@ -6,7 +6,7 @@ using Pautik;
 
 [RequireComponent(typeof(Button))]
 
-public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IDropHandler, IBeginDragHandler, IEndDragHandler
 {
     public enum ButtonClickType { ChangeSprite, ChangeColor, Both, None, OnlyInvokeEvent}
     public ButtonClickType _buttonClickType;
@@ -38,10 +38,14 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     }
     public bool IsSelected { get; private set; }
 
-    public event Action onSelect;
-    public event Action onDeselect;
-    public event Action onPointerDown;
-    public event Action onPointerUp;
+    public event Action OnSelect;
+    public event Action OnDeselect;
+    public event Action OnPointerDownHandler;
+    public event Action OnPointerUpHandler;
+    public event Action OnDragHandler;
+    public event Action OnDropHandler;
+    public event Action OnBeginDragHandler;
+    public event Action OnEndDragHandler;
 
 
 
@@ -84,9 +88,35 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
 
-    public void OnPointerUp(PointerEventData eventData) => onPointerDown?.Invoke();
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        OnPointerDownHandler?.Invoke();
+    }
 
-    public void OnPointerDown(PointerEventData eventData) => onPointerUp?.Invoke();
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        OnPointerUpHandler?.Invoke();
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        OnDragHandler?.Invoke();
+    }
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        OnDropHandler?.Invoke();
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        OnBeginDragHandler?.Invoke();
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        OnEndDragHandler?.Invoke();
+    }
 
     public void Select()
     {
@@ -96,7 +126,7 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (!IsSelected)
         {
             IsSelected = true;
-            onSelect?.Invoke();
+            OnSelect?.Invoke();
 
             ChangeBuutonLook(_sprtPressed, _clrPressed);
             Conditions<bool>.Compare(_buttonClickType == ButtonClickType.OnlyInvokeEvent, Deselect, DeselectAllSiblings);
@@ -116,7 +146,7 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (IsSelected)
         {
             IsSelected = false;
-            onDeselect?.Invoke();
+            OnDeselect?.Invoke();
 
             if (_sprtReleased == null)
                 return;

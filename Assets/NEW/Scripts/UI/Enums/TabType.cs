@@ -1,5 +1,6 @@
 
 public enum TabType 
 {
-    Options
+    Options,
+    EditMode
 }

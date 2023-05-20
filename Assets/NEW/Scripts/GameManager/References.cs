@@ -1,17 +1,22 @@
 using UnityEngine;
 
-public class GameSceneObjectsReferences : MonoBehaviour
+public class References : MonoBehaviour
 {
     [Header("Game Saving & Loading System")]
     [SerializeField] private GameObjectsPersistenceManager _gameObjectsPersistenceManager;
-    [Header("Camera")]
+
+    [Header("Edit Mode Manager")]
+    [SerializeField] private EditModeManager _editModeManager;
     [SerializeField] private ObjectHighlighter _objectHighlighter;
 
-    public static GameSceneObjectsReferences Manager { get; private set; }
+    // Instance
+    public static References Manager { get; private set; }
 
     // Game Saving & Loading System
     public GameObjectsPersistenceManager GameObjectsPersistenceManager => _gameObjectsPersistenceManager;
-    // Camera
+
+    // Edit Mode Manager
+    public EditModeManager EditModeManager => _editModeManager;
     public ObjectHighlighter ObjectHighlighter => _objectHighlighter;
 
 

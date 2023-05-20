@@ -20,8 +20,8 @@ public abstract class BaseGameOptionsHandler : MonoBehaviour
             return;
         }
 
-        _btnGameOptions.onSelect += OnSelect;
-        _btnGameOptions.onDeselect += OnDeselect;
+        _btnGameOptions.OnSelect += OnSelect;
+        _btnGameOptions.OnDeselect += OnDeselect;
     }
 
     /// <summary>

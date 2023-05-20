@@ -39,16 +39,16 @@ public class BtnTxt : MonoBehaviour
 
     private void OnEnable()
     {
-        _btn.onSelect += delegate { ChangeTextColor(_clrPressed); };
+        _btn.OnSelect += delegate { ChangeTextColor(_clrPressed); };
 
-        _btn.onDeselect += delegate { ChangeTextColor(_clrReleased); };
+        _btn.OnDeselect += delegate { ChangeTextColor(_clrReleased); };
     }
 
     private void OnDisable()
     {
-        _btn.onSelect -= delegate { ChangeTextColor(_clrPressed); };
+        _btn.OnSelect -= delegate { ChangeTextColor(_clrPressed); };
 
-        _btn.onDeselect -= delegate { ChangeTextColor(_clrReleased); };
+        _btn.OnDeselect -= delegate { ChangeTextColor(_clrReleased); };
     }
 
     private void CacheTextDefaultLook() => _clrReleased = _txt.color;
