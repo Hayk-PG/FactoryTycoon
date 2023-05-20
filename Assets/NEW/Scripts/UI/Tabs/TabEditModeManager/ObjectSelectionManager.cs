@@ -81,7 +81,7 @@ public class ObjectSelectionManager : MonoBehaviour
     {
         if (_isHandlerDragging)
         {
-            _objectHighlighter.DetectRayCastHit();
+            _objectHighlighter.DetectRayCastHit(_selectedObject);
         }
     }
 

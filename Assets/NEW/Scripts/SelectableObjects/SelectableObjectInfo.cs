@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class SelectableObjectInfo : MonoBehaviour
 {
-    [SerializeField] private Vector3 _objectSizeInTiles;
+    [SerializeField] private Vector3[] _dimension;
 
-    public Vector3 ObjectSizeInTiles => _objectSizeInTiles;
+    public Vector3[] Dimension => _dimension;
 }

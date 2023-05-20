@@ -25,12 +25,7 @@ public class TileHighlightManager  : MonoBehaviour
 
     private void OnEditMode(bool isEditModeActive)
     {
-        ToggleTileHighlight(isEditModeActive);
-    }
-
-    private void ToggleTileHighlight(bool isHighlighted)
-    {
-        if (!isHighlighted)
+        if (!isEditModeActive)
         {
             ChangeMaterialColor(_colorNormal);
             return;
@@ -46,18 +41,48 @@ public class TileHighlightManager  : MonoBehaviour
         }
     }
 
-    private void ToggleTileHighlightAtPosition(Vector3 position)
+    private void ToggleTileHighlightAtPosition(Vector3 position, SelectableObjectInfo selectedObject, ObjectHighlighter objectHighlighter)
     {
-        bool isCurrentTileHighlighted = transform.position == position;
-
-        if (isCurrentTileHighlighted)
+        if (transform.position == position)
         {
-            _meshRenderer.material.color = _colorHighlighted;
+            if(objectHighlighter == null)
+            {
+                return;
+            }
+
+            objectHighlighter.ToggleHighlightedTiles(this, selectedObject);
+
+            return;
+        }
+    }
+
+    public void ResetHighlight()
+    {
+        if (IsCurrentTileOccupied())
+        {
+            ChangeMaterialColor(_blockedHighlightColor);
         }
         else
         {
-            _meshRenderer.material.color = _colorNormal;
+            ChangeMaterialColor(_colorInEditMode);
         }
+    }
+
+    public void Highlight()
+    {
+        if (IsCurrentTileOccupied())
+        {
+            ChangeMaterialColor(_blockedHighlightColor);
+        }
+        else
+        {
+            ChangeMaterialColor(_colorHighlighted);
+        }
+    }
+
+    public void Block()
+    {
+        ChangeMaterialColor(_blockedHighlightColor);
     }
 
     private void ChangeMaterialColor(Color color)

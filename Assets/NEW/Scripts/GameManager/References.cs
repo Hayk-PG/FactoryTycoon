@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class References : MonoBehaviour
 {
+    [Header("Game Manager")]
+    [SerializeField] private TileCollection _tileCollection;
+
     [Header("Game Saving & Loading System")]
     [SerializeField] private GameObjectsPersistenceManager _gameObjectsPersistenceManager;
 
@@ -11,6 +14,9 @@ public class References : MonoBehaviour
 
     // Instance
     public static References Manager { get; private set; }
+
+    // Game Manager
+    public TileCollection TileCollection => _tileCollection;
 
     // Game Saving & Loading System
     public GameObjectsPersistenceManager GameObjectsPersistenceManager => _gameObjectsPersistenceManager;

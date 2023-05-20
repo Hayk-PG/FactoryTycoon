@@ -12,8 +12,9 @@ GameObject:
   - component: {fileID: 6988872061193336999}
   - component: {fileID: 7964541677575241354}
   - component: {fileID: 4173890544175740239}
-  - component: {fileID: 7574609058074088505}
+  - component: {fileID: 813953515782478395}
   - component: {fileID: 5197717743289826640}
+  - component: {fileID: 7574609058074088505}
   m_Layer: 6
   m_Name: Tile
   m_TagString: Untagged
@@ -99,6 +100,33 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 10, y: 0.5, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &813953515782478395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474694244110249747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74dee94894f0bc9488f40b26bca756b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _tileOccupancyManager: {fileID: 5197717743289826640}
+  _tileHighlightManager: {fileID: 7574609058074088505}
+--- !u!114 &5197717743289826640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474694244110249747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 971edb4aa77571d4ba7b7c2b3e982815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isCurrentTileOccupied: 0
 --- !u!114 &7574609058074088505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,16 +145,3 @@ MonoBehaviour:
   _colorHighlighted: {r: 0, g: 1, b: 0, a: 1}
   _blockedHighlightColor: {r: 1, g: 0, b: 0, a: 1}
   _tileOccupancyManager: {fileID: 5197717743289826640}
---- !u!114 &5197717743289826640
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 474694244110249747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 971edb4aa77571d4ba7b7c2b3e982815, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isCurrentTileOccupied: 0
