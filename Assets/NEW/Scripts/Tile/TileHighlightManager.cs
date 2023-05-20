@@ -39,14 +39,14 @@ public class TileHighlightManager  : MonoBehaviour
     }
 
     // Respond to the object placement validation request
-    private void OnObjectPlacementValidationRequest(Vector3 position, SelectableObjectInfo selectedObject, ObjectPlacementValidator objectPlacementValidator)
+    private void OnObjectPlacementValidationRequest(Vector3 position, SelectableObjectInfo selectedObject, Transform dummy, ObjectPlacementValidator objectPlacementValidator)
     {
         if(transform.position != position)
         {
             return;
         }
 
-        objectPlacementValidator.RespondObjectPlacementValidationRequest(this, selectedObject);
+        objectPlacementValidator.RespondObjectPlacementValidationRequest(this, selectedObject, dummy);
     }
 
     /// <summary>
@@ -71,6 +71,16 @@ public class TileHighlightManager  : MonoBehaviour
     public void Block()
     {
         ChangeMaterialColor(_blockedHighlightColor);
+    }
+
+    /// <summary>
+    /// Sets the occupied state of the tile.
+    /// </summary>
+    /// <param name="isOccupied">The desired occupied state.</param>
+    public void SetTileOccupied(bool isOccupied)
+    {
+        _tileOccupancyManager.IsCurrentTileOccupied = isOccupied;
+        ResetHighlight();
     }
 
     // Change the material color to the specified color

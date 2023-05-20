@@ -9,6 +9,7 @@ public class ObjectSelectionManager : MonoBehaviour
     [Header("Selectable Objects")]
     [SerializeField] private ButtonWithSelectableObject[] _buttonWithSelectableObjects;
     private SelectableObjectInfo _selectedObject;
+    private Transform _dummy;
 
     [Header("Tile Highlighting")]
     [SerializeField] private ObjectPlacementValidator _objectPlacementValidator;
@@ -25,17 +26,16 @@ public class ObjectSelectionManager : MonoBehaviour
 
     private void Update()
     {
-        RequetObjectPlacementValidation();
+        RequestObjectPlacementValidation();
     }
 
-    // Subscribe to button events for each selectable object
     private void SubscribeToBtnEvents()
     {
         for (int i = 0; i < _buttonWithSelectableObjects.Length; i++)
         {
             ButtonWithSelectableObject buttonWithSelectableObject = _buttonWithSelectableObjects[i];
             buttonWithSelectableObject.Btn.OnPointerUpHandler += () => OnPointerUpHandler(buttonWithSelectableObject.SelectableObjectInfo);
-            buttonWithSelectableObject.Btn.OnPointerDownHandler += () => OnPointerDownHandler(buttonWithSelectableObject.SelectableObjectInfo);
+            buttonWithSelectableObject.Btn.OnPointerDownHandler += () => OnPointerDownHandler(buttonWithSelectableObject.SelectableObjectInfo, buttonWithSelectableObject.Dummy);
             buttonWithSelectableObject.Btn.OnBeginDragHandler += () => OnBeginDragHandler(buttonWithSelectableObject.SelectableObjectInfo);
             buttonWithSelectableObject.Btn.OnEndDragHandler += () => OnEndDragHandler(buttonWithSelectableObject.SelectableObjectInfo);
         }
@@ -46,9 +46,9 @@ public class ObjectSelectionManager : MonoBehaviour
         // TODO: Implement pointer up handler logic
     }
 
-    private void OnPointerDownHandler(SelectableObjectInfo selectableObject)
+    private void OnPointerDownHandler(SelectableObjectInfo selectableObject, Transform dummy)
     {
-        SelectObject(selectableObject);
+        SelectObject(selectableObject, dummy);
     }
 
     private void OnBeginDragHandler(SelectableObjectInfo selectableObject)
@@ -59,9 +59,10 @@ public class ObjectSelectionManager : MonoBehaviour
     private void OnEndDragHandler(SelectableObjectInfo selectableObject)
     {       
         DetectHandlerDrag(false);
+        PlaceSelectedObject();
     }
 
-    private void SelectObject(SelectableObjectInfo selectableObject)
+    private void SelectObject(SelectableObjectInfo selectableObject, Transform dummy)
     {
         bool hasSelectableObject = selectableObject != null;
 
@@ -71,6 +72,7 @@ public class ObjectSelectionManager : MonoBehaviour
         }
 
         _selectedObject = selectableObject;
+        _dummy = dummy;
     }
 
     private void DetectHandlerDrag(bool isHandlerDragging)
@@ -78,12 +80,17 @@ public class ObjectSelectionManager : MonoBehaviour
         _isHandlerDragging = isHandlerDragging;
     }
 
-    private void RequetObjectPlacementValidation()
+    private void RequestObjectPlacementValidation()
     {
         if (_isHandlerDragging)
         {
-            _objectPlacementValidator.RequetObjectPlacementValidation(_selectedObject);
+            _objectPlacementValidator.RequestObjectPlacementValidation(_selectedObject, _dummy);
         }
+    }
+
+    private void PlaceSelectedObject()
+    {
+        _objectPlacementValidator.PlaceSelectedObject(_selectedObject, _dummy);
     }
 
     public void SetActive(bool isActive)

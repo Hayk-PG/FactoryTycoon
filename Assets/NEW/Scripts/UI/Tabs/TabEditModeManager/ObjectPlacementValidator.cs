@@ -9,13 +9,13 @@ public class ObjectPlacementValidator : MonoBehaviour
     [SerializeField] private LayerMask _tileLayerMask;
     private RaycastHit _hit;
 
-    private TileHighlightManager _responderTile;
+    private TileHighlightManager _respondedTile;
     private List<TileHighlightManager> _allRequiredTiles = new List<TileHighlightManager>();
     private bool _isResponded;
 
     private Ray Ray => CameraPoint.ScreenPointToRay(_camera, Input.mousePosition);
 
-    public event Action<Vector3, SelectableObjectInfo, ObjectPlacementValidator> OnObjectPlacementValidationRequest;
+    public event Action<Vector3, SelectableObjectInfo, Transform, ObjectPlacementValidator> OnObjectPlacementValidationRequest;
 
 
 
@@ -24,11 +24,11 @@ public class ObjectPlacementValidator : MonoBehaviour
     /// // Requests object placement validation for the selected object
     /// </summary>
     /// <param name="selectedObject"></param>
-    public void RequetObjectPlacementValidation(SelectableObjectInfo selectedObject)
+    public void RequestObjectPlacementValidation(SelectableObjectInfo selectedObject, Transform dummy)
     {
         if (IsRaycastHit(Ray, Mathf.Infinity, _tileLayerMask))
         {
-            RaiseObjectPlacementValidationRequestEvent(_hit.transform.position, selectedObject);
+            RaiseObjectPlacementValidationRequestEvent(_hit.transform.position, selectedObject, dummy);
         }
     }
 
@@ -39,9 +39,9 @@ public class ObjectPlacementValidator : MonoBehaviour
     }
 
     // Raises the object placement validation request event
-    private void RaiseObjectPlacementValidationRequestEvent(Vector3 position, SelectableObjectInfo selectedObject)
+    private void RaiseObjectPlacementValidationRequestEvent(Vector3 position, SelectableObjectInfo selectedObject, Transform dummy)
     {
-        OnObjectPlacementValidationRequest?.Invoke(position, selectedObject, this);
+        OnObjectPlacementValidationRequest?.Invoke(position, selectedObject, dummy, this);
     }
 
     /// <summary>
@@ -49,9 +49,9 @@ public class ObjectPlacementValidator : MonoBehaviour
     /// </summary>
     /// <param name="tileHighlightManager">The tile highlight manager of the selected tile</param>
     /// <param name="selectedObject">The selected object</param>
-    public void RespondObjectPlacementValidationRequest(TileHighlightManager tileHighlightManager, SelectableObjectInfo selectedObject)
+    public void RespondObjectPlacementValidationRequest(TileHighlightManager tileHighlightManager, SelectableObjectInfo selectedObject, Transform dummy)
     {
-        bool isSameTile = _responderTile == tileHighlightManager;
+        bool isSameTile = _respondedTile == tileHighlightManager;
 
         if (isSameTile)
         {
@@ -71,13 +71,31 @@ public class ObjectPlacementValidator : MonoBehaviour
         StoreAllRequiredTiles(selectedObject);
 
         // Try to highlight or block the required tiles based on the placement validity
-        TryHighlightTiles();
+        TryHighlightTiles(dummy);
+    }
+
+    /// <summary>
+    /// Places the selected object in the game world.
+    /// </summary>
+    /// <param name="selectedObject">The selected object to place.</param>
+    /// <param name="dummy">The dummy object representing the placement location.</param>
+    public void PlaceSelectedObject(SelectableObjectInfo selectedObject, Transform dummy)
+    {
+        SetDummyActive(dummy, false);
+
+        if (!_isResponded)
+        {
+            return;
+        }
+
+        InstantiateSelectedObject(selectedObject);
+        SetTilesOccupied(true);
     }
 
     // Sets the current responder tile
     private void GetResponderTile(TileHighlightManager tileHighlightManager)
     {
-        _responderTile = tileHighlightManager;
+        _respondedTile = tileHighlightManager;
         _isResponded = true;
     }
 
@@ -103,7 +121,7 @@ public class ObjectPlacementValidator : MonoBehaviour
         foreach (var dimension in selectedObject.Dimension)
         {
             // Calculate the position of the neighbor tile
-            Vector3 neighborTilePosition = _responderTile.transform.position + dimension;
+            Vector3 neighborTilePosition = _respondedTile.transform.position + dimension;
 
             // Check if the neighbor tile is a valid tile (exists and not occupied)
             bool isValidTile = References.Manager.TileCollection.Dict.ContainsKey(neighborTilePosition) && !References.Manager.TileCollection.Dict[neighborTilePosition].TileOccupancyManager.IsCurrentTileOccupied;
@@ -112,7 +130,7 @@ public class ObjectPlacementValidator : MonoBehaviour
             Conditions<bool>.Compare(isValidTile, () => AddTile(References.Manager.TileCollection.Dict[neighborTilePosition].TileHighlightManager), () => _isResponded = false);
 
             // Add the current tile to the required tiles list
-            AddTile(_responderTile);         
+            AddTile(_respondedTile);         
         }
     }
 
@@ -122,26 +140,62 @@ public class ObjectPlacementValidator : MonoBehaviour
     }
 
     // Tries to highlight the required tiles if all requirements are met, otherwise blocks the tiles
-    private void TryHighlightTiles()
+    private void TryHighlightTiles(Transform dummy)
     {
-        Conditions<bool>.Compare(_isResponded, HighlightTiles, BlockTiles);
+        Conditions<bool>.Compare(_isResponded, ()=> HighlightTiles(dummy), ()=> BlockTiles(dummy));
     }
 
     // Highlights all required tiles
-    private void HighlightTiles()
+    private void HighlightTiles(Transform dummy)
     {
         foreach (var highlightedTile in _allRequiredTiles)
         {
             highlightedTile.Highlight();
         }
+
+        SetDummyActive(dummy, true);
     }
 
     // Block all required tiles
-    private void BlockTiles()
+    private void BlockTiles(Transform dummy)
     {
         foreach (var highlightedTile in _allRequiredTiles)
         {
             highlightedTile.Block();
         }
+
+        SetDummyActive(dummy, false);
+    }
+
+    /// <summary>
+    /// Instantiates the selected object at the placement location.
+    /// </summary>
+    /// <param name="selectedObject">The selected object to instantiate.</param>
+    private void InstantiateSelectedObject(SelectableObjectInfo selectedObject)
+    {
+        SelectableObjectInfo newObject = Instantiate(selectedObject, _respondedTile.transform.position, Quaternion.identity);
+    }
+
+    /// <summary>
+    /// Sets the occupied state of the required tiles.
+    /// </summary>
+    /// <param name="isOccupied">The desired occupied state.</param>
+    private void SetTilesOccupied(bool isOccupied)
+    {
+        foreach (var tile in _allRequiredTiles)
+        {
+            tile.SetTileOccupied(isOccupied);
+        }
+    }
+
+    /// <summary>
+    /// Sets the position and active state of a dummy object.
+    /// </summary>
+    /// <param name="dummy">The dummy object to set.</param>
+    /// <param name="isActive">The desired active state of the dummy object.</param>
+    private void SetDummyActive(Transform dummy, bool isActive)
+    {
+        dummy.position = _respondedTile.transform.position + Vector3.up / 2;
+        dummy.gameObject.SetActive(isActive);
     }
 }
