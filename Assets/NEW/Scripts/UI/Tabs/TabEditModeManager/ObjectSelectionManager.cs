@@ -8,10 +8,10 @@ public class ObjectSelectionManager : MonoBehaviour
 
     [Header("Selectable Objects")]
     [SerializeField] private ButtonWithSelectableObject[] _buttonWithSelectableObjects;
-    [SerializeField] private SelectableObjectInfo _selectedObject;
+    private SelectableObjectInfo _selectedObject;
 
     [Header("Tile Highlighting")]
-    [SerializeField] private ObjectHighlighter _objectHighlighter;
+    [SerializeField] private ObjectPlacementValidator _objectPlacementValidator;
 
     [SerializeField] private bool _isHandlerDragging;
 
@@ -25,9 +25,10 @@ public class ObjectSelectionManager : MonoBehaviour
 
     private void Update()
     {
-        DetectRayCastHit();
+        RequetObjectPlacementValidation();
     }
 
+    // Subscribe to button events for each selectable object
     private void SubscribeToBtnEvents()
     {
         for (int i = 0; i < _buttonWithSelectableObjects.Length; i++)
@@ -42,7 +43,7 @@ public class ObjectSelectionManager : MonoBehaviour
 
     private void OnPointerUpHandler(SelectableObjectInfo selectableObject)
     {
-
+        // TODO: Implement pointer up handler logic
     }
 
     private void OnPointerDownHandler(SelectableObjectInfo selectableObject)
@@ -77,11 +78,11 @@ public class ObjectSelectionManager : MonoBehaviour
         _isHandlerDragging = isHandlerDragging;
     }
 
-    private void DetectRayCastHit()
+    private void RequetObjectPlacementValidation()
     {
         if (_isHandlerDragging)
         {
-            _objectHighlighter.DetectRayCastHit(_selectedObject);
+            _objectPlacementValidator.RequetObjectPlacementValidation(_selectedObject);
         }
     }
 

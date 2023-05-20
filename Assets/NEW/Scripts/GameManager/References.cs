@@ -10,7 +10,7 @@ public class References : MonoBehaviour
 
     [Header("Edit Mode Manager")]
     [SerializeField] private EditModeManager _editModeManager;
-    [SerializeField] private ObjectHighlighter _objectHighlighter;
+    [SerializeField] private ObjectPlacementValidator _objectPlacementValidator;
 
     // Instance
     public static References Manager { get; private set; }
@@ -23,7 +23,7 @@ public class References : MonoBehaviour
 
     // Edit Mode Manager
     public EditModeManager EditModeManager => _editModeManager;
-    public ObjectHighlighter ObjectHighlighter => _objectHighlighter;
+    public ObjectPlacementValidator ObjectPlacementValidator => _objectPlacementValidator;
 
 
 

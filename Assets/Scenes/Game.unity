@@ -683,7 +683,7 @@ MonoBehaviour:
   _tileCollection: {fileID: 203285615}
   _gameObjectsPersistenceManager: {fileID: 1240379599}
   _editModeManager: {fileID: 315605753}
-  _objectHighlighter: {fileID: 461819702}
+  _objectPlacementValidator: {fileID: 461819702}
 --- !u!4 &203285614
 Transform:
   m_ObjectHideFlags: 0
@@ -1931,8 +1931,7 @@ MonoBehaviour:
   - _btn: {fileID: 782363363}
     _selectableObject: {fileID: 9127109733545557565, guid: 1b7a6031dd349594c84f05f2007eae50,
       type: 3}
-  _selectedObject: {fileID: 0}
-  _objectHighlighter: {fileID: 461819702}
+  _objectPlacementValidator: {fileID: 461819702}
   _isHandlerDragging: 0
 --- !u!225 &461819701
 CanvasGroup:
@@ -1955,7 +1954,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 461819698}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91036490c14337145ba4f3dce37dff25, type: 3}
+  m_Script: {fileID: 11500000, guid: fd6caf7d400c938469f5342da293f8e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 2093830367}

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Pautik;
 
 public class TileHighlightManager  : MonoBehaviour
 {
@@ -19,10 +20,12 @@ public class TileHighlightManager  : MonoBehaviour
     
     private void OnEnable()
     {
+        // Subscribe to the edit mode event and object placement validation request event
         References.Manager.EditModeManager.OnEditMode += OnEditMode;
-        References.Manager.ObjectHighlighter.OnTileHighlight += ToggleTileHighlightAtPosition;
+        References.Manager.ObjectPlacementValidator.OnObjectPlacementValidationRequest += OnObjectPlacementValidationRequest;
     }
 
+    // If not in edit mode, set the normal color
     private void OnEditMode(bool isEditModeActive)
     {
         if (!isEditModeActive)
@@ -31,65 +34,52 @@ public class TileHighlightManager  : MonoBehaviour
             return;
         }
 
-        if (IsCurrentTileOccupied())
-        {
-            ChangeMaterialColor(_blockedHighlightColor);
-        }
-        else
-        {
-            ChangeMaterialColor(_colorInEditMode);
-        }
+        // Compare the current tile's occupancy status and set the appropriate color
+        Conditions<bool>.Compare(IsCurrentTileOccupied(), () => ChangeMaterialColor(_blockedHighlightColor), () => ChangeMaterialColor(_colorInEditMode));
     }
 
-    private void ToggleTileHighlightAtPosition(Vector3 position, SelectableObjectInfo selectedObject, ObjectHighlighter objectHighlighter)
+    // Respond to the object placement validation request
+    private void OnObjectPlacementValidationRequest(Vector3 position, SelectableObjectInfo selectedObject, ObjectPlacementValidator objectPlacementValidator)
     {
-        if (transform.position == position)
+        if(transform.position != position)
         {
-            if(objectHighlighter == null)
-            {
-                return;
-            }
-
-            objectHighlighter.ToggleHighlightedTiles(this, selectedObject);
-
             return;
         }
+
+        objectPlacementValidator.RespondObjectPlacementValidationRequest(this, selectedObject);
     }
 
+    /// <summary>
+    /// Reset the highlight color based on the current tile's occupancy status
+    /// </summary>
     public void ResetHighlight()
     {
-        if (IsCurrentTileOccupied())
-        {
-            ChangeMaterialColor(_blockedHighlightColor);
-        }
-        else
-        {
-            ChangeMaterialColor(_colorInEditMode);
-        }
+        Conditions<bool>.Compare(IsCurrentTileOccupied(), () => ChangeMaterialColor(_blockedHighlightColor), () => ChangeMaterialColor(_colorInEditMode));
     }
 
+    /// <summary>
+    /// Set the highlight color based on the current tile's occupancy status
+    /// </summary>
     public void Highlight()
     {
-        if (IsCurrentTileOccupied())
-        {
-            ChangeMaterialColor(_blockedHighlightColor);
-        }
-        else
-        {
-            ChangeMaterialColor(_colorHighlighted);
-        }
+        Conditions<bool>.Compare(IsCurrentTileOccupied(), () => ChangeMaterialColor(_blockedHighlightColor), () => ChangeMaterialColor(_colorHighlighted));
     }
 
+    /// <summary>
+    /// Set the block color
+    /// </summary>
     public void Block()
     {
         ChangeMaterialColor(_blockedHighlightColor);
     }
 
+    // Change the material color to the specified color
     private void ChangeMaterialColor(Color color)
     {
         _meshRenderer.material.color = color;
     }
 
+    // Check if the current tile is occupied
     private bool IsCurrentTileOccupied()
     {
         return _tileOccupancyManager.IsCurrentTileOccupied;
