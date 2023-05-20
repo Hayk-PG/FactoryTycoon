@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 3902949181068554327}
   - component: {fileID: 4768360228005187853}
   - component: {fileID: 9127109733545557565}
+  - component: {fileID: -2871577351447804424}
   m_Layer: 0
   m_Name: CubeExtraBig
   m_TagString: Untagged
@@ -167,3 +168,18 @@ MonoBehaviour:
   - {x: 0, y: 0, z: -1}
   - {x: -1, y: 0, z: -1}
   - {x: -1, y: 0, z: 0}
+  _objectReplacementAnimation: {fileID: -2871577351447804424}
+--- !u!114 &-2871577351447804424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5687677912547946282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9342ed0a2df8f6f41acb2b83a4663293, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounceHeight: 1
+  bounceDuration: 0.5

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7497222196737437816}
   - component: {fileID: 1978891866127425604}
   - component: {fileID: -4723471874796869025}
+  - component: {fileID: 4046479020949585370}
   m_Layer: 0
   m_Name: CubeSmall
   m_TagString: Untagged
@@ -61,6 +62,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _dimension:
   - {x: 0, y: 0, z: 0}
+  _objectReplacementAnimation: {fileID: 4046479020949585370}
+--- !u!114 &4046479020949585370
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1771529253969518439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9342ed0a2df8f6f41acb2b83a4663293, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounceHeight: 1
+  bounceDuration: 0.5
 --- !u!1 &6487781778491356846
 GameObject:
   m_ObjectHideFlags: 0

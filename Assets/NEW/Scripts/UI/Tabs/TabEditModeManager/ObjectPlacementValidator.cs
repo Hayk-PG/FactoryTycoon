@@ -174,6 +174,7 @@ public class ObjectPlacementValidator : MonoBehaviour
     private void InstantiateSelectedObject(SelectableObjectInfo selectedObject)
     {
         SelectableObjectInfo newObject = Instantiate(selectedObject, _respondedTile.transform.position, Quaternion.identity);
+        newObject.ObjectReplacementAnimation.StartReplacementAnimation();
     }
 
     /// <summary>
