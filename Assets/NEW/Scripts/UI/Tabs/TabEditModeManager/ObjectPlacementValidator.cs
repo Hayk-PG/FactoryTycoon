@@ -39,7 +39,7 @@ public class ObjectPlacementValidator : MonoBehaviour
     }
 
     // Raises the object placement validation request event
-    private void RaiseObjectPlacementValidationRequestEvent(Vector3 position, SelectableObjectInfo selectedObject, Transform dummy)
+    public void RaiseObjectPlacementValidationRequestEvent(Vector3 position, SelectableObjectInfo selectedObject, Transform dummy = null)
     {
         OnObjectPlacementValidationRequest?.Invoke(position, selectedObject, dummy, this);
     }
@@ -79,7 +79,7 @@ public class ObjectPlacementValidator : MonoBehaviour
     /// </summary>
     /// <param name="selectedObject">The selected object to place.</param>
     /// <param name="dummy">The dummy object representing the placement location.</param>
-    public void PlaceSelectedObject(SelectableObjectInfo selectedObject, Transform dummy)
+    public void PlaceSelectedObject(SelectableObjectInfo selectedObject = null, Transform dummy = null)
     {
         SetDummyActive(dummy, false);
 
@@ -173,6 +173,13 @@ public class ObjectPlacementValidator : MonoBehaviour
     /// <param name="selectedObject">The selected object to instantiate.</param>
     private void InstantiateSelectedObject(SelectableObjectInfo selectedObject)
     {
+        bool hasSelectedObject = selectedObject != null;
+
+        if (!hasSelectedObject)
+        {
+            return;
+        }
+
         SelectableObjectInfo newObject = Instantiate(selectedObject, _respondedTile.transform.position, Quaternion.identity);
         newObject.ObjectReplacementAnimation.StartReplacementAnimation();
     }
@@ -196,6 +203,13 @@ public class ObjectPlacementValidator : MonoBehaviour
     /// <param name="isActive">The desired active state of the dummy object.</param>
     private void SetDummyActive(Transform dummy, bool isActive)
     {
+        bool hasDummy = dummy != null;
+
+        if (!hasDummy)
+        {
+            return;
+        }
+
         dummy.position = _respondedTile.transform.position + Vector3.up / 2;
         dummy.gameObject.SetActive(isActive);
     }

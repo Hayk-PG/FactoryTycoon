@@ -14,6 +14,8 @@ public class TileHighlightManager  : MonoBehaviour
 
     [Header("Tile Occupation Detector")]
     [SerializeField] private TileOccupancyManager _tileOccupancyManager;
+
+    private bool _isEditModeActive;
     
     
     
@@ -28,11 +30,7 @@ public class TileHighlightManager  : MonoBehaviour
     // If not in edit mode, set the normal color
     private void OnEditMode(bool isEditModeActive)
     {
-        if (!isEditModeActive)
-        {
-            ChangeMaterialColor(_colorNormal);
-            return;
-        }
+        _isEditModeActive = isEditModeActive;
 
         // Compare the current tile's occupancy status and set the appropriate color
         Conditions<bool>.Compare(IsCurrentTileOccupied(), () => ChangeMaterialColor(_blockedHighlightColor), () => ChangeMaterialColor(_colorInEditMode));
@@ -86,6 +84,13 @@ public class TileHighlightManager  : MonoBehaviour
     // Change the material color to the specified color
     private void ChangeMaterialColor(Color color)
     {
+        if (!_isEditModeActive)
+        {
+            _meshRenderer.material.color = _colorNormal;
+
+            return;
+        }
+
         _meshRenderer.material.color = color;
     }
 

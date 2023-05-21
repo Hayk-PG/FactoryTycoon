@@ -41,7 +41,7 @@ public class ObjectReplacementAnimation : MonoBehaviour
         yield return StartCoroutine(Scale(thirdTargetScale, _initialScale, 0.1f, true));
     }
 
-    private IEnumerator Scale(Vector3 initialScale, Vector3 targetScale, float bounceDuration, bool setToInitialScale = false)
+    private IEnumerator Scale(Vector3 initialScale, Vector3 targetScale, float bounceDuration, bool resetScale = false)
     {
         float timeElapsed = 0.0f;
 
@@ -60,7 +60,7 @@ public class ObjectReplacementAnimation : MonoBehaviour
         }
 
         // Reset the scale to the initial scale
-        if (setToInitialScale)
+        if (resetScale)
         {
             transform.localScale = _initialScale;
         }
