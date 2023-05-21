@@ -4,6 +4,7 @@ public class References : MonoBehaviour
 {
     [Header("Game Manager")]
     [SerializeField] private TileCollection _tileCollection;
+    [SerializeField] private ConveyorCollection _conveyorCollection;
 
     [Header("Game Saving & Loading System")]
     [SerializeField] private GameObjectsPersistenceManager _gameObjectsPersistenceManager;
@@ -17,6 +18,7 @@ public class References : MonoBehaviour
 
     // Game Manager
     public TileCollection TileCollection => _tileCollection;
+    public ConveyorCollection ConveyorCollection => _conveyorCollection;
 
     // Game Saving & Loading System
     public GameObjectsPersistenceManager GameObjectsPersistenceManager => _gameObjectsPersistenceManager;

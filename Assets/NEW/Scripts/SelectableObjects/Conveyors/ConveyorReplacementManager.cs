@@ -18,5 +18,6 @@ public class ConveyorReplacementManager : MonoBehaviour
         Vector3 specifiedTilePosition = new Vector3(transform.position.x, 0, transform.position.z);
         References.Manager.ObjectPlacementValidator.RaiseObjectPlacementValidationRequestEvent(specifiedTilePosition, _selectableObjectInfo);
         References.Manager.ObjectPlacementValidator.PlaceSelectedObject();
+        References.Manager.ConveyorCollection.Add(transform.position, this);
     }
 }
