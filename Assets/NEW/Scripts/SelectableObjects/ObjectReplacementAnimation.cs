@@ -32,11 +32,13 @@ public class ObjectReplacementAnimation : MonoBehaviour
     private IEnumerator BounceAnimation()
     {     
         Vector3 firstTargetScale = new Vector3(_initialScale.x, _initialScale.y / 2, _initialScale.z);
-        Vector3 secondTargetScale = new Vector3(_initialScale.x, _initialScale.y * 1.5f, _initialScale.z);
+        Vector3 secondTargetScale = new Vector3(_initialScale.x, _initialScale.y * 1.7f, _initialScale.z);
+        Vector3 thirdTargetScale = new Vector3(_initialScale.x, _initialScale.y / 1.3f, _initialScale.z);
 
         yield return StartCoroutine(Scale(_initialScale, firstTargetScale, 0.1f));
-        yield return StartCoroutine(Scale(_initialScale, secondTargetScale, 0.1f));
-        yield return StartCoroutine(Scale(_initialScale, _initialScale, 0.2f));
+        yield return StartCoroutine(Scale(firstTargetScale, secondTargetScale, 0.13f));
+        yield return StartCoroutine(Scale(secondTargetScale, thirdTargetScale, 0.12f));
+        yield return StartCoroutine(Scale(thirdTargetScale, _initialScale, 0.1f, true));
     }
 
     private IEnumerator Scale(Vector3 initialScale, Vector3 targetScale, float bounceDuration, bool setToInitialScale = false)
