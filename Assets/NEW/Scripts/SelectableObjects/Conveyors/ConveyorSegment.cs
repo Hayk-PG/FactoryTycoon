@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ConveyorReplacementManager : MonoBehaviour
+public class ConveyorSegment : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private SelectableObjectInfo _selectableObjectInfo;
@@ -36,7 +36,7 @@ public class ConveyorReplacementManager : MonoBehaviour
         References.Manager.ConveyorCollection.Add(transform.position, this);
     }
 
-    private void OnCollectionAdd(Vector3 position, ConveyorReplacementManager conveyor)
+    private void OnCollectionAdd(Vector3 position, ConveyorSegment conveyor)
     {
         CheckConveyorsOnAdjacentSides();
     }

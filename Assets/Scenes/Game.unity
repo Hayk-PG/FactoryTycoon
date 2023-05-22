@@ -2535,10 +2535,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _camera: {fileID: 2093830367}
-  _maskConveyor:
+  _conveyorMask:
     serializedVersion: 2
     m_Bits: 128
-  _prefab: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7, type: 3}
+  _conveyorPrefab: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+    type: 3}
 --- !u!1001 &495609391
 PrefabInstance:
   m_ObjectHideFlags: 0
