@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Pautik;
 
@@ -49,15 +47,64 @@ public class Test : MonoBehaviour
             Vector3Int a = -Vector3Int.FloorToInt(currentMousePosition);
 
             float x = currentMousePosition.x;
+            float y = (_initialMousePosition - MousePosition()).y;
+            float z = currentMousePosition.z;
+            float c = _hit.collider.transform.position.x;
+
+            Vector3 direction = new Vector3(x, y, z).normalized;
 
             float v = 0;
 
-            if (_previousPosition != a && _previousPosition.z >= a.z)
+            if (IsForwards(direction))
             {
-                print(a);
+                print($"Forward: {direction}");
+            }
 
-                Vector3 direction = Vector3.back;
-                Vector3 spawnPosition = _nextConveyorPosition + direction;
+            if (IsBackwards(direction))
+            {
+                print($"Backwards: {direction}");
+            }
+
+            if (IsLeft(direction))
+            {
+                print($"Left: {direction}");
+            }
+
+            if (IsRight(direction))
+            {
+                print($"Right: {direction}");
+            }
+
+            //print($"{direction}");
+
+            //if (direction.x < 0 && direction.y > 0 && direction.z > 0)
+            //{
+            //    print($"Backwards: {direction}");
+            //}
+
+            //if (direction.x > 0 && direction.y < 0 && direction.z < 0)
+            //{
+            //    print($"Forward: {direction}");
+            //}
+
+            //if (direction.x > 0 && direction.y > 0 && direction.z < 0)
+            //{
+            //    print($"Left: {direction}");
+            //}
+
+            //if (direction.x < 0 && direction.y < 0 && direction.z > 0)
+            //{
+            //    print($"Right: {direction}");
+            //}
+
+            //print(Vector3.Angle(currentMousePosition - _hit.collider.transform.position, _hit.collider.transform.forward) - 45);
+            //Quaternion angle = Quaternion.LookRotation(currentMousePosition - _conveyorPosition, _hit.collider.transform.forward);
+            //print(angle);
+
+            if (_previousPosition != a/* && _previousPosition.z >= a.z*/)
+            {
+                Vector3 dir = IsForwards(direction) ? Vector3.forward : IsBackwards(direction) ? Vector3.back : IsLeft(direction) ? Vector3.left : IsRight(direction) ? Vector3.right : Vector3.zero;
+                Vector3 spawnPosition = _nextConveyorPosition + dir;
 
                 if (References.Manager.TileCollection.Dict.ContainsKey(spawnPosition))
                 {
@@ -73,6 +120,51 @@ public class Test : MonoBehaviour
                 _previousPosition = a;
             }
         }
+    }
+
+    private bool AAA(Vector3 direction)
+    {
+        return direction.x >= -0.1f && direction.x <= 0.1f || direction.y >= -0.1f && direction.y <= 0.1f || direction.z >= -0.1f && direction.z <= 0.1f;
+    }
+
+    private bool IsBackwards(Vector3 direction)
+    {
+        if (AAA(direction))
+        {
+            return false;
+        }
+
+        return direction.x < 0 && direction.y > 0 && direction.z > 0;
+    }
+
+    private bool IsForwards(Vector3 direction)
+    {
+        if (AAA(direction))
+        {
+            return false;
+        }
+
+        return direction.x > 0 && direction.y < 0 && direction.z < 0;
+    }
+
+    private bool IsLeft(Vector3 direction)
+    {
+        if (AAA(direction))
+        {
+            return false;
+        }
+
+        return direction.x > 0 && direction.y > 0 && direction.z < 0;
+    }
+
+    private bool IsRight(Vector3 direction)
+    {
+        if (AAA(direction))
+        {
+            return false;
+        }
+
+        return direction.x < 0 && direction.y < 0 && direction.z > 0;
     }
 
     private float P(float value)
