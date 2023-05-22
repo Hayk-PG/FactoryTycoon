@@ -8,6 +8,13 @@ public class ConveyorReplacementManager : MonoBehaviour
     [Header("Conveyor Base Transform")]
     [SerializeField] private Transform _conveyorBase;
 
+    [Header("The Beginning & Ending Parts Of The Conveyor")]
+    [SerializeField] private bool _isInputSection;
+    [SerializeField] private bool _isOutputSection;
+
+    public bool IsInputSection => _isInputSection;
+    public bool IsOutputSection => _isOutputSection;
+
 
 
 
@@ -40,6 +47,7 @@ public class ConveyorReplacementManager : MonoBehaviour
                                             References.Manager.ConveyorCollection.Dict.ContainsKey(AdjacentPositions()[2]) && References.Manager.ConveyorCollection.Dict.ContainsKey(AdjacentPositions()[3]);
 
         SetConveyorBaseActive(!haveConveyorsOnAdjacentSides);
+        SetIOSections(!haveConveyorsOnAdjacentSides);
     }
 
     private Vector3[] AdjacentPositions()
@@ -56,5 +64,18 @@ public class ConveyorReplacementManager : MonoBehaviour
     private void SetConveyorBaseActive(bool isActive)
     {
         _conveyorBase.gameObject.SetActive(isActive);
+    }
+
+    private void SetIOSections(bool? isInputSection = null, bool? isOutputSection = null)
+    {
+        if (isInputSection.HasValue)
+        {
+            _isInputSection = isInputSection.Value;
+        }
+
+        if (isOutputSection.HasValue)
+        {
+            _isOutputSection = isOutputSection.Value;
+        }
     }
 }
