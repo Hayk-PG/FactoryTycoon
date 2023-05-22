@@ -6,4 +6,9 @@ public class ConveyorCollection : BaseCollection<Vector3, ConveyorReplacementMan
     {
         
     }
+
+    public override void Add(Vector3 key, ConveyorReplacementManager value)
+    {
+        base.Add(key, value);
+    }
 }

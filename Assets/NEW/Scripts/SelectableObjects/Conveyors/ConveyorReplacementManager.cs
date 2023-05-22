@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 
 public class ConveyorReplacementManager : MonoBehaviour
@@ -17,18 +16,21 @@ public class ConveyorReplacementManager : MonoBehaviour
         RequestPlacementValidation();
     }
 
+    private void OnEnable()
+    {
+        References.Manager.ConveyorCollection.OnCollectionAdd += OnCollectionAdd;
+    }
+
     private void RequestPlacementValidation()
     {
         Vector3 specifiedTilePosition = new Vector3(transform.position.x, 0, transform.position.z);
         References.Manager.ObjectPlacementValidator.RaiseObjectPlacementValidationRequestEvent(specifiedTilePosition, _selectableObjectInfo);
         References.Manager.ObjectPlacementValidator.PlaceSelectedObject();
         References.Manager.ConveyorCollection.Add(transform.position, this);
-        StartCoroutine(RunAdjacentSidesCheck());
     }
 
-    private IEnumerator RunAdjacentSidesCheck()
+    private void OnCollectionAdd(Vector3 position, ConveyorReplacementManager conveyor)
     {
-        yield return new WaitForSeconds(0.1f);
         CheckConveyorsOnAdjacentSides();
     }
 

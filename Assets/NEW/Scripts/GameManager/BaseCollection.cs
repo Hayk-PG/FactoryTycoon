@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BaseCollection<T,T1> : MonoBehaviour
 {
     public Dictionary<T, T1> Dict = new Dictionary<T, T1>();
+
+    public event Action<T, T1> OnCollectionAdd;
 
 
 
@@ -25,6 +28,7 @@ public class BaseCollection<T,T1> : MonoBehaviour
         }
 
         Dict.Add(key, value);
+        OnCollectionAdd?.Invoke(key, value);
     }
 
     public void Remove(T key)
