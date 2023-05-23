@@ -5,6 +5,7 @@ public class ConveyorSegment : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private SelectableObjectInfo _selectableObjectInfo;
+    [SerializeField] private ConveyorRenderer _conveyorRenderer;
 
     [Header("Conveyor Base Transform")]
     [SerializeField] private Transform _conveyorBase;
@@ -17,6 +18,7 @@ public class ConveyorSegment : MonoBehaviour
     [SerializeField] private bool _isInputSection;
     [SerializeField] private bool _isOutputSection;
 
+    public ConveyorRenderer ConveyorRenderer => _conveyorRenderer;
     public ConveyorDirection ConveyorDirection => _conveyorDirection;
     public Vector3 Direction { get; private set; }
     public int Id => _id;

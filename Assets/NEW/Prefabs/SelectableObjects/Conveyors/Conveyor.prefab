@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 7574226432142075506}
   - component: {fileID: 5359755417325252200}
   - component: {fileID: 4917757949649561583}
+  - component: {fileID: 7103401737222904191}
   m_Layer: 7
   m_Name: Conveyor
   m_TagString: Untagged
@@ -160,9 +161,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _selectableObjectInfo: {fileID: 5359755417325252200}
+  _conveyorRenderer: {fileID: 7103401737222904191}
   _conveyorBase: {fileID: 7098020998457592129}
+  _conveyorDirection: 0
+  _id: 0
   _isInputSection: 0
   _isOutputSection: 0
+--- !u!114 &7103401737222904191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2802087280103207628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce5b0b14fd0c3426b8b2ed9bf1352e5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _meshRenderers:
+  - {fileID: 7557116774063339211}
+  - {fileID: 1495927950342723411}
+  _materialDefault: {fileID: 2100000, guid: 719993d8dc36c4013b6ba86fcb5638c3, type: 2}
+  _materialHighlight: {fileID: 2100000, guid: 934a6aa15863e25489b70776b030bc37, type: 2}
 --- !u!1 &3744488871452882641
 GameObject:
   m_ObjectHideFlags: 0
