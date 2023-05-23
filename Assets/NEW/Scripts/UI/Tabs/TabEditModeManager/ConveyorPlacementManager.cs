@@ -74,7 +74,7 @@ public class ConveyorPlacementManager : MonoBehaviour
                     return;
                 }
 
-                SpawnConveyorAndUpdatePositions(hasTile, spawnPosition, roundedMousePosition);
+                SpawnConveyorAndUpdatePositions(hasTile, spawnPosition, roundedMousePosition, dir);
             }
         }
     }
@@ -84,7 +84,7 @@ public class ConveyorPlacementManager : MonoBehaviour
         return IsForwards(direction) ? Vector3.forward : IsBackwards(direction) ? Vector3.back : IsLeft(direction) ? Vector3.left : IsRight(direction) ? Vector3.right : Vector3.zero;
     }
 
-    private void SpawnConveyorAndUpdatePositions(bool hasTile, Vector3 spawnPosition, Vector3Int roundedMousePosition)
+    private void SpawnConveyorAndUpdatePositions(bool hasTile, Vector3 spawnPosition, Vector3Int roundedMousePosition, Vector3 direction)
     {
         if (hasTile)
         {
@@ -93,12 +93,21 @@ public class ConveyorPlacementManager : MonoBehaviour
             if (!isTileOccupied)
             {
                 ConveyorSegment conveyor = InstantiateConveyor(spawnPosition);
+                SetConveyorDirection(conveyor, direction);
                 _conveyorHitPosition = conveyor.transform.position;
                 _conveyorSpawnPosition = _conveyorHitPosition;
             }
         }
 
         _previousPosition = roundedMousePosition;
+    }
+
+    private void SetConveyorDirection(ConveyorSegment conveyorSegment, Vector3 direction)
+    {
+        ConveyorDirection conveyorDirection = direction == Vector3.right ? ConveyorDirection.Right : direction == Vector3.left ? ConveyorDirection.Left :
+                                              direction == Vector3.forward ? ConveyorDirection.Forward : ConveyorDirection.Backward;
+
+        conveyorSegment.SetConveyorDirection(conveyorDirection);
     }
 
     private void GetConveyorHitPosition()

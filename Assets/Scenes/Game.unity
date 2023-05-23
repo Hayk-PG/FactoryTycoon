@@ -287,6 +287,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Conveyor
       objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
       propertyPath: m_RootOrder
@@ -355,6 +360,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Conveyor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
@@ -916,6 +926,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Conveyor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
@@ -1753,6 +1768,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Conveyor
       objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
       propertyPath: m_RootOrder
@@ -1974,7 +1994,6 @@ GameObject:
   - component: {fileID: 315605753}
   - component: {fileID: 315605759}
   - component: {fileID: 315605758}
-  - component: {fileID: 315605757}
   m_Layer: 5
   m_Name: Tab Edit Mode
   m_TagString: Untagged
@@ -2042,24 +2061,6 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
---- !u!114 &315605757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 315605751}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 551269bea63c6b54fb9c323257b9a789, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _camera: {fileID: 2093830367}
-  _conveyorMask:
-    serializedVersion: 2
-    m_Bits: 128
-  _conveyorPrefab: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
-    type: 3}
 --- !u!114 &315605758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2118,6 +2119,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Conveyor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
@@ -2714,6 +2720,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Conveyor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
@@ -5825,6 +5836,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Conveyor
       objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
       propertyPath: m_RootOrder
@@ -5893,6 +5909,7 @@ GameObject:
   - component: {fileID: 1011689772}
   - component: {fileID: 1011689774}
   - component: {fileID: 1011689773}
+  - component: {fileID: 1011689776}
   - component: {fileID: 1011689775}
   m_Layer: 5
   m_Name: Tab Conveyer System Manager
@@ -5937,7 +5954,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _canvasGroup: {fileID: 1011689774}
-  _currentTabType: 2
+  _currentTabType: 4
   _btnSwitcher: {fileID: 1175869722}
 --- !u!225 &1011689774
 CanvasGroup:
@@ -5970,6 +5987,24 @@ MonoBehaviour:
   _btnLeftDirection: {fileID: 1126640854}
   _btnForwardDirection: {fileID: 2070016587}
   _btnBackwardDirection: {fileID: 1276217946}
+--- !u!114 &1011689776
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011689771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 551269bea63c6b54fb9c323257b9a789, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _camera: {fileID: 2093830367}
+  _conveyorMask:
+    serializedVersion: 2
+    m_Bits: 128
+  _conveyorPrefab: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+    type: 3}
 --- !u!1001 &1015041383
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6131,6 +6166,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Conveyor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
@@ -7171,6 +7211,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Conveyor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
@@ -12917,6 +12962,11 @@ PrefabInstance:
     - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
       propertyPath: _isInputSection
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4917757949649561583, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _conveyorDirection
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,

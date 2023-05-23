@@ -1,5 +1,4 @@
 using UnityEngine;
-using Pautik;
 
 public class TabConveyorSystemMode : BaseTabManager
 {
