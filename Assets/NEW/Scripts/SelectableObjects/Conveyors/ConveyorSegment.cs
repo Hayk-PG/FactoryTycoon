@@ -9,11 +9,16 @@ public class ConveyorSegment : MonoBehaviour
     [Header("Conveyor Base Transform")]
     [SerializeField] private Transform _conveyorBase;
 
+    [Header("Specifications")]
+    [SerializeField] private ConveyorDirection _conveyorDirection;
+    [SerializeField] private int _id;
+
     [Header("The Beginning & Ending Parts Of The Conveyor")]
     [SerializeField] private bool _isInputSection;
     [SerializeField] private bool _isOutputSection;
 
     public Vector3 Direction { get; private set; }
+    public int Id => _id;
     public bool IsInputSection => _isInputSection;
     public bool IsOutputSection => _isOutputSection;
 
@@ -23,6 +28,7 @@ public class ConveyorSegment : MonoBehaviour
     private void Start()
     {
         RequestPlacementValidation();
+        SetId();
     }
 
     private void OnEnable()
@@ -36,6 +42,11 @@ public class ConveyorSegment : MonoBehaviour
         References.Manager.ObjectPlacementValidator.RaiseObjectPlacementValidationRequestEvent(specifiedTilePosition, _selectableObjectInfo);
         References.Manager.ObjectPlacementValidator.PlaceSelectedObject();
         References.Manager.ConveyorCollection.Add(transform.position, this);
+    }
+
+    private void SetId()
+    {
+        _id = References.Manager.ConveyorCollection.Dict.Count;
     }
 
     private void OnCollectionAdd(Vector3 position, ConveyorSegment conveyor)
@@ -84,6 +95,34 @@ public class ConveyorSegment : MonoBehaviour
         if (hasInputSection)
         {
             _isInputSection = isInputSection.Value;
+        }
+    }
+
+    private void SetConveyorDirection()
+    {
+        bool hasConveyorInRightDirection = HasNeighborConveyer(0);
+        bool hasConveyorInLeftDirection = HasNeighborConveyer(0);
+        bool hasConveyorInForwardDirection = HasNeighborConveyer(0);
+        bool hasConveyorInBackwardDirection = HasNeighborConveyer(0);
+
+        if (hasConveyorInRightDirection)
+        {
+            _conveyorDirection = ConveyorDirection.Left;
+        }
+
+        if (hasConveyorInLeftDirection)
+        {
+            _conveyorDirection = ConveyorDirection.Right;
+        }
+
+        if (hasConveyorInForwardDirection)
+        {
+            _conveyorDirection = ConveyorDirection.Backward;
+        }
+
+        if (hasConveyorInBackwardDirection)
+        {
+            _conveyorDirection = ConveyorDirection.Forward;
         }
     }
 }
