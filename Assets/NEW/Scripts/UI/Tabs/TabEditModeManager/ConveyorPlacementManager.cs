@@ -34,7 +34,7 @@ public class ConveyorPlacementManager : MonoBehaviour
 
             if (isHit)
             {
-                bool canExtend = References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position].IsInputSection;
+                bool canExtend = References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position].IsOutputSection;
 
                 GetConveyorHitPosition();
                 AssignConveyorSpawnPosition(_conveyorHitPosition);
@@ -127,7 +127,7 @@ public class ConveyorPlacementManager : MonoBehaviour
 
         if (References.Manager.ConveyorCollection.Dict.ContainsKey(_hitInfo.collider.transform.position + Vector3.right))
         {
-            if (References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position + Vector3.right].IsInputSection)
+            if (References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position + Vector3.right].IsOutputSection)
             {
                 SetMousePositionInitialization(true);
                 return;
@@ -136,7 +136,7 @@ public class ConveyorPlacementManager : MonoBehaviour
 
         if (References.Manager.ConveyorCollection.Dict.ContainsKey(_hitInfo.collider.transform.position + Vector3.left))
         {
-            if (References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position + Vector3.left].IsInputSection)
+            if (References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position + Vector3.left].IsOutputSection)
             {
                 SetMousePositionInitialization(true);
                 return;
@@ -145,7 +145,7 @@ public class ConveyorPlacementManager : MonoBehaviour
 
         if (References.Manager.ConveyorCollection.Dict.ContainsKey(_hitInfo.collider.transform.position + Vector3.forward))
         {
-            if (References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position + Vector3.forward].IsInputSection)
+            if (References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position + Vector3.forward].IsOutputSection)
             {
                 SetMousePositionInitialization(true);
                 return;
@@ -154,7 +154,7 @@ public class ConveyorPlacementManager : MonoBehaviour
 
         if (References.Manager.ConveyorCollection.Dict.ContainsKey(_hitInfo.collider.transform.position + Vector3.back))
         {
-            if (References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position + Vector3.back].IsInputSection)
+            if (References.Manager.ConveyorCollection.Dict[_hitInfo.collider.transform.position + Vector3.back].IsOutputSection)
             {
                 SetMousePositionInitialization(true);
                 return;

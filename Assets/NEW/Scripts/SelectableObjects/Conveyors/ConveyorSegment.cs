@@ -1,4 +1,5 @@
 using UnityEngine;
+using Pautik;
 
 public class ConveyorSegment : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class ConveyorSegment : MonoBehaviour
     [SerializeField] private bool _isInputSection;
     [SerializeField] private bool _isOutputSection;
 
+    public Vector3 Direction { get; private set; }
     public bool IsInputSection => _isInputSection;
     public bool IsOutputSection => _isOutputSection;
 
@@ -43,22 +45,20 @@ public class ConveyorSegment : MonoBehaviour
 
     private void CheckConveyorsOnAdjacentSides()
     {
-        bool haveConveyorsOnAdjacentSides = References.Manager.ConveyorCollection.Dict.ContainsKey(AdjacentPositions()[0]) && References.Manager.ConveyorCollection.Dict.ContainsKey(AdjacentPositions()[1]) ||
-                                            References.Manager.ConveyorCollection.Dict.ContainsKey(AdjacentPositions()[2]) && References.Manager.ConveyorCollection.Dict.ContainsKey(AdjacentPositions()[3]);
+        bool haveConveyorsOnAdjacentSides = HasNeighborConveyer(0) && HasNeighborConveyer(1) || HasNeighborConveyer(2) && HasNeighborConveyer(3);
 
         SetConveyorBaseActive(!haveConveyorsOnAdjacentSides);
         SetIOSections(!haveConveyorsOnAdjacentSides);
     }
 
-    private Vector3[] AdjacentPositions()
+    /// <summary>
+    /// Checks if there is a neighboring conveyor segment at the specified adjacent position index in the right, left, forward, or back directions.
+    /// </summary>
+    /// <param name="adjacentPositionIndex">The index of the adjacent position to check (0 for right, 1 for left, 2 for forward, 3 for back).</param>
+    /// <returns>True if there is a neighboring conveyor segment, false otherwise.</returns>
+    private bool HasNeighborConveyer(int adjacentPositionIndex)
     {
-        return new Vector3[]
-        {
-            transform.position + Vector3.right,
-            transform.position + Vector3.left,
-            transform.position + Vector3.forward,
-            transform.position + Vector3.back
-        };
+        return Checker.ContainsKey<Vector3, ConveyorSegment>(References.Manager.ConveyorCollection.Dict, AdjacentPositionCalculator.GetAdjacentPositions(transform.position)[adjacentPositionIndex]);
     }
 
     private void SetConveyorBaseActive(bool isActive)
@@ -66,16 +66,24 @@ public class ConveyorSegment : MonoBehaviour
         _conveyorBase.gameObject.SetActive(isActive);
     }
 
-    private void SetIOSections(bool? isInputSection = null, bool? isOutputSection = null)
+    private void SetIOSections(bool? isOutputSection = null, bool? isInputSection = null)
     {
-        if (isInputSection.HasValue)
+        bool hasOutputSection = isOutputSection.HasValue;
+        bool hasInputSection = isInputSection.HasValue;
+
+        if (hasOutputSection)
         {
-            _isInputSection = isInputSection.Value;
+            if(IsInputSection && isOutputSection.Value)
+            {
+                return;
+            }
+
+            _isOutputSection = isOutputSection.Value;
         }
 
-        if (isOutputSection.HasValue)
+        if (hasInputSection)
         {
-            _isOutputSection = isOutputSection.Value;
+            _isInputSection = isInputSection.Value;
         }
     }
 }
