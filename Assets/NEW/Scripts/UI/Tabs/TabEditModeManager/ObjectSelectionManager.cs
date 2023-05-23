@@ -3,9 +3,6 @@ using Pautik;
 
 public class ObjectSelectionManager : MonoBehaviour
 {
-    [Header("UI Elements")]
-    [SerializeField] private CanvasGroup _canvasGroup;
-
     [Header("Selectable Objects")]
     [SerializeField] private ButtonWithSelectableObject[] _buttonWithSelectableObjects;
     private SelectableObjectInfo _selectedObject;
@@ -91,10 +88,5 @@ public class ObjectSelectionManager : MonoBehaviour
     private void PlaceSelectedObject()
     {
         _objectPlacementValidator.PlaceSelectedObject(_selectedObject, _dummy);
-    }
-
-    public void SetActive(bool isActive)
-    {
-        GlobalFunctions.CanvasGroupActivity(_canvasGroup, isActive);
     }
 }

@@ -13,6 +13,9 @@ public class References : MonoBehaviour
     [SerializeField] private EditModeManager _editModeManager;
     [SerializeField] private ObjectPlacementValidator _objectPlacementValidator;
 
+    [Header("Conveyor System Manager")]
+    [SerializeField] private ConveyorSystemManager _conveyorSystemManager;
+
     // Instance
     public static References Manager { get; private set; }
 
@@ -26,6 +29,9 @@ public class References : MonoBehaviour
     // Edit Mode Manager
     public EditModeManager EditModeManager => _editModeManager;
     public ObjectPlacementValidator ObjectPlacementValidator => _objectPlacementValidator;
+
+    // Conveyor System Manager
+    public ConveyorSystemManager ConveyorSystemManager => _conveyorSystemManager;
 
 
 

@@ -1,6 +1,9 @@
 
 public enum TabType 
 {
+    None,
     Options,
-    EditMode
+    GameMode,
+    EditMode,
+    ConveyorSystemMode
 }

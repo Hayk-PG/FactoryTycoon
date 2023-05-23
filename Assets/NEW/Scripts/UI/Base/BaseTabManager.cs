@@ -1,6 +1,7 @@
 using UnityEngine;
 using Pautik;
 
+[RequireComponent(typeof(CanvasGroup))]
 public class BaseTabManager : MonoBehaviour, ITabManager
 {
     [Header("UI Elements")]
@@ -12,6 +13,10 @@ public class BaseTabManager : MonoBehaviour, ITabManager
     protected IHUDManager _hudManager;
     protected object[] _data;
 
+    public bool IsCurrentTabOpen
+    {
+        get => _canvasGroup.alpha > 0.1f;
+    }
     public ITabManager ObserverTab { get; set; }
     
     
@@ -33,6 +38,20 @@ public class BaseTabManager : MonoBehaviour, ITabManager
     protected void GetBaseHUDManager()
     {
         _hudManager = Get<IHUDManager>.From(gameObject);
+    }
+
+    /// <summary>
+    /// Close all other child tabs except the current tab
+    /// </summary>
+    protected virtual void OpenCurrentTab()
+    {
+        if (IsCurrentTabOpen)
+        {
+            return;
+        }
+       
+        GlobalFunctions.CanvasGroupActivity(_canvasGroup, true);
+        _hudManager.OpenCurrentAndCloseOthers(this);
     }
 
     /// <summary>
@@ -111,8 +130,13 @@ public class BaseTabManager : MonoBehaviour, ITabManager
     /// <summary>
     /// Close the current tab.
     /// </summary>
-    public void CloseCurrentTab(object[] data = null)
+    public virtual void CloseCurrentTab(object[] data = null)
     {
+        if (!IsCurrentTabOpen)
+        {
+            return;
+        }
+
         GlobalFunctions.CanvasGroupActivity(_canvasGroup, false);
         RetrieveData(data);
     }

@@ -7,4 +7,5 @@ public interface IHUDManager
     event Action<TabType, ITabManager, bool, object[]> OnTabChanged;
 
     void RaiseEvent(TabType targetTabType, ITabManager linkedTab, bool activate = true, object[] data = null);
+    void OpenCurrentAndCloseOthers(ITabManager currentTab);
 }
