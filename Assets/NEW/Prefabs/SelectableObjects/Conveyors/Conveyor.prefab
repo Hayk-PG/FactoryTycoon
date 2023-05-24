@@ -141,6 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdffe3df7c5ffa34495c6592e9cba954, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _conveyorSegment: {fileID: 4917757949649561583}
 --- !u!1 &2802087280103207628
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,6 +257,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8eb56d847b7b20e4c931934e4e803cd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _conveyorSegment: {fileID: 4917757949649561583}
+  _item: {fileID: 0}
 --- !u!1 &3744488871452882641
 GameObject:
   m_ObjectHideFlags: 0

@@ -22,7 +22,7 @@ public class ConveyorTrigger : MonoBehaviour
             return;
         }
 
-        //_triggeredItem.PushItem(_conveyorSegment.Direction);
+        _triggeredItem.PushItem(_conveyorSegment.Direction);
     }
 
     private void OnTriggerExit(Collider other)
@@ -32,6 +32,6 @@ public class ConveyorTrigger : MonoBehaviour
             return;
         }
 
-        //_triggeredItem = null;
+        _triggeredItem = null;
     }
 }

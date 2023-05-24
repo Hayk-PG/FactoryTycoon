@@ -7,22 +7,12 @@ public class ItemManager : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Rigidbody _rigidbody;
 
-    [SerializeField] private bool _push;
     private bool _isPushed;
 
     private List<Vector3> _queuedPushes = new List<Vector3>();
 
 
 
-
-    private void Update()
-    {
-        if (_push)
-        {
-            PushItem(Vector3.left);
-            _push = false;
-        }
-    }
 
     public void PushItem(Vector3 direction)
     {
@@ -33,13 +23,12 @@ public class ItemManager : MonoBehaviour
             return;
         }
 
-        StartCoroutine(Test(direction, 2));
+        StartCoroutine(Test(direction, 4));
     }
 
     private IEnumerator Test(Vector3 direction, float time)
     {
-        print("aa");
-
+        print(direction);
         _isPushed = true;
 
         Vector3 initialPosition = _rigidbody.position;
@@ -47,7 +36,9 @@ public class ItemManager : MonoBehaviour
         Vector3 currentPosition = Vector3.zero;
 
         float currentDistance = Vector3.Distance(initialPosition, targetPosition);
-      
+
+        print(currentDistance);
+
         while (currentDistance > 0.05f)
         {         
             currentPosition = Vector3.Lerp(_rigidbody.position, targetPosition, time * Time.fixedDeltaTime);

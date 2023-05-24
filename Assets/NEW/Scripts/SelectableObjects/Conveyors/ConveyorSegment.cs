@@ -21,7 +21,7 @@ public class ConveyorSegment : MonoBehaviour
 
     public ConveyorRenderer ConveyorRenderer => _conveyorRenderer;
     public ConveyorDirection ConveyorDirection => _conveyorDirection;
-    public Vector3 Direction { get; private set; }
+    public Vector3 Direction { get; private set; } = Vector3.left; // Default direction
     public int Id => _id;
     public bool IsInputSection => _isInputSection;
     public bool IsOutputSection => _isOutputSection;

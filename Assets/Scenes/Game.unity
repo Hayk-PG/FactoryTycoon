@@ -12969,6 +12969,12 @@ PrefabInstance:
       propertyPath: _conveyorDirection
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5466311671128089827, guid: 369236bcaf79caa45a500987bb55b5f7,
+        type: 3}
+      propertyPath: _item
+      value: 
+      objectReference: {fileID: 8134961169230579775, guid: 65f4cdd0548f06c4097210183448ec05,
+        type: 3}
     - target: {fileID: 6828809592636219638, guid: 369236bcaf79caa45a500987bb55b5f7,
         type: 3}
       propertyPath: m_RootOrder
@@ -13044,6 +13050,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Item_BasicBox
       objectReference: {fileID: 0}
+    - target: {fileID: 213777411570673604, guid: 65f4cdd0548f06c4097210183448ec05,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4939986537749896357, guid: 65f4cdd0548f06c4097210183448ec05,
         type: 3}
       propertyPath: m_RootOrder
@@ -13097,11 +13108,6 @@ PrefabInstance:
     - target: {fileID: 4939986537749896357, guid: 65f4cdd0548f06c4097210183448ec05,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8134961169230579775, guid: 65f4cdd0548f06c4097210183448ec05,
-        type: 3}
-      propertyPath: _push
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

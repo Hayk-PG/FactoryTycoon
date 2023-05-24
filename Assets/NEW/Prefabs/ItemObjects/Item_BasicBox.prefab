@@ -77,8 +77,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 6465229109049166316}
-  _speed: 0
-  _push: 0
 --- !u!1 &8926008373887677535
 GameObject:
   m_ObjectHideFlags: 0
