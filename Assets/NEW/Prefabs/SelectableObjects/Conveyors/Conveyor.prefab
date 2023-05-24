@@ -223,6 +223,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _selectableObjectInfo: {fileID: 5359755417325252200}
   _conveyorRenderer: {fileID: 7103401737222904191}
+  _conveyorTrigger: {fileID: 9015970649703058582}
   _conveyorBase: {fileID: 7098020998457592129}
   _conveyorDirection: 0
   _id: 0
@@ -258,7 +259,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _conveyorSegment: {fileID: 4917757949649561583}
-  _item: {fileID: 0}
+  _itemPrefab: {fileID: 0}
 --- !u!1 &3744488871452882641
 GameObject:
   m_ObjectHideFlags: 0

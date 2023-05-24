@@ -15,6 +15,29 @@ namespace Pautik
         {
             return dict.ContainsKey(key);
         }
+
+        /// <summary>
+        /// Checks if the specified key exists in the dictionary and retrieves the corresponding value.
+        /// </summary>
+        /// <typeparam name="T">The type of the dictionary key.</typeparam>
+        /// <typeparam name="T1">The type of the dictionary value.</typeparam>
+        /// <param name="dict">The dictionary to check.</param>
+        /// <param name="key">The key to check for.</param>
+        /// <param name="value">The retrieved value associated with the key.</param>
+        /// <returns><c>true</c> if the key exists in the dictionary; otherwise, <c>false</c>.</returns>
+        public static bool IsValueInDictionary<T, T1>(System.Collections.Generic.Dictionary<T, T1> dict, T key, out T1 value) 
+        {
+            if(ContainsKey(dict, key))
+            {
+                value = dict[key];
+
+                return true;              
+            }
+
+            value = default;
+
+            return false;
+        }
     }
 
     public class AdjacentPositionCalculator

@@ -8,6 +8,11 @@ public class ConveyorTrigger : MonoBehaviour
 
     private ItemManager _triggeredItem;
 
+    public bool HasTriggeredItem
+    {
+        get => _triggeredItem != null;
+    }
+
 
 
 
@@ -16,9 +21,7 @@ public class ConveyorTrigger : MonoBehaviour
     {
         AssignTriggeredItem(Get<ItemManager>.From(other.gameObject));
 
-        bool isTriggeredItemNull = _triggeredItem == null;
-
-        if (isTriggeredItemNull)
+        if (_triggeredItem == null)
         {
             return;
         }
@@ -48,6 +51,6 @@ public class ConveyorTrigger : MonoBehaviour
     // Moves the assigned item using the conveyor segment direction.
     private void MoveAssignedItem()
     {
-        _triggeredItem.MoveItem(_conveyorSegment.Direction);
+        _triggeredItem.MoveItem(_conveyorSegment.Direction, _conveyorSegment);
     }
 }

@@ -1,15 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Pautik;
 
 public class ItemManager : MonoBehaviour
 {
     [Header("Components")]
     [SerializeField] private Rigidbody _rigidbody;
 
-    private bool _isMoved;
+    // Represents the data for a movement action.
+    public struct MoveData
+    {
+        public Vector3 Direction { get; set; } // The direction of the movement.
+        public ConveyorSegment Conveyor { get; set; } // The target conveyor segment.
+    }
 
-    private List<Vector3> _queuedMoves = new List<Vector3>();
+    private bool _isMoved; // Flag indicating if the item is currently being moved.
+    private List<MoveData> _queuedMoves = new List<MoveData>(); // Queue of queued movement data.
 
 
 
@@ -18,20 +25,20 @@ public class ItemManager : MonoBehaviour
     /// Moves the item in the specified direction.
     /// </summary>
     /// <param name="direction">The direction to move the item.</param>
-    public void MoveItem(Vector3 direction)
+    public void MoveItem(Vector3 direction, ConveyorSegment conveyorSegment)
     {
-        _queuedMoves.Add(direction);
+        _queuedMoves.Add(new MoveData { Direction = direction, Conveyor = conveyorSegment });
 
         if (_isMoved)
         {
             return;
         }
 
-        StartCoroutine(PerformMove(direction, 4));
+        StartCoroutine(PerformMove(direction, conveyorSegment, 4));
     }
 
     // Performs the move towards the target position over a specified time.
-    private IEnumerator PerformMove(Vector3 direction, float time)
+    private IEnumerator PerformMove(Vector3 direction, ConveyorSegment conveyorSegment, float time)
     {
         // Set the move state to true as the move has been started.
         SetMoveState(true);
@@ -40,19 +47,28 @@ public class ItemManager : MonoBehaviour
         Vector3 initialPosition = _rigidbody.position;
         Vector3 targetPosition = initialPosition + direction;
         Vector3 lerpedPosition = Vector3.zero;
+        Vector3 targetConveyorPosition = conveyorSegment.transform.position + conveyorSegment.Direction;
 
         // Calculate the initial distance and distance threshold
         float distance = Vector3.Distance(initialPosition, targetPosition);
         float distanceThreshold = 0.05f;
+        bool canMove = false;
+
+        // Check if the target conveyor position exists in the dictionary
+        Checker.IsValueInDictionary(References.Manager.ConveyorCollection.Dict, targetConveyorPosition, out ConveyorSegment targetConveyorSegment);
 
         // Move towards the target position while the distance is above the threshold
         while (distance > distanceThreshold)
         {
-            // Calculate the lerped position based on the current time and fixed delta time
-            lerpedPosition = Vector3.Lerp(_rigidbody.position, targetPosition, time * Time.fixedDeltaTime);
-            // Update the distance based on the new position
-            distance = Vector3.Distance(_rigidbody.position, targetPosition);
-            MoveToPosition(lerpedPosition);
+            if (targetConveyorSegment != null && !targetConveyorSegment.ConveyorTrigger.HasTriggeredItem || canMove)
+            {
+                canMove = true;
+                // Calculate the lerped position based on the current time and fixed delta time
+                lerpedPosition = Vector3.Lerp(_rigidbody.position, targetPosition, time * Time.fixedDeltaTime);
+                // Update the distance based on the new position
+                distance = Vector3.Distance(_rigidbody.position, targetPosition);
+                MoveToPosition(lerpedPosition);
+            }
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
@@ -61,14 +77,15 @@ public class ItemManager : MonoBehaviour
         _rigidbody.position = targetPosition;
         // Remove the first queued move as it has been processed.
         _queuedMoves.RemoveAt(0);
+        
 
         // Processes the queued moves and performs the next move if available.
         bool hasQueuedPushes = _queuedMoves.Count > 0;
-        
+
         if (hasQueuedPushes)
         {
             // Process the remaining queued moves by starting the coroutine.
-            StartCoroutine(PerformMove(_queuedMoves[0], 2));
+            StartCoroutine(PerformMove(_queuedMoves[0].Direction, _queuedMoves[0].Conveyor, 2));
 
             yield break;
         }

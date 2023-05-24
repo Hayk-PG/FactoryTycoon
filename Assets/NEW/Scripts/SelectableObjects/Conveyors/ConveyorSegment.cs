@@ -7,6 +7,7 @@ public class ConveyorSegment : MonoBehaviour
     [Header("Components")]
     [SerializeField] private SelectableObjectInfo _selectableObjectInfo;
     [SerializeField] private ConveyorRenderer _conveyorRenderer;
+    [SerializeField] private ConveyorTrigger _conveyorTrigger;
 
     [Header("Conveyor Base Transform")]
     [SerializeField] private Transform _conveyorBase;
@@ -20,6 +21,7 @@ public class ConveyorSegment : MonoBehaviour
     [SerializeField] private bool _isOutputSection;
 
     public ConveyorRenderer ConveyorRenderer => _conveyorRenderer;
+    public ConveyorTrigger ConveyorTrigger => _conveyorTrigger;
     public ConveyorDirection ConveyorDirection => _conveyorDirection;
     public Vector3 Direction { get; private set; } = Vector3.left; // Default direction
     public int Id => _id;
@@ -87,7 +89,7 @@ public class ConveyorSegment : MonoBehaviour
     /// <returns>True if there is a neighboring conveyor segment, false otherwise.</returns>
     private bool HasNeighborConveyer(int adjacentPositionIndex)
     {
-        return Checker.ContainsKey<Vector3, ConveyorSegment>(References.Manager.ConveyorCollection.Dict, AdjacentPositionCalculator.GetAdjacentPositions(transform.position)[adjacentPositionIndex]);
+        return Checker.ContainsKey(References.Manager.ConveyorCollection.Dict, AdjacentPositionCalculator.GetAdjacentPositions(transform.position)[adjacentPositionIndex]);
     }
 
     // Set the conveyor base active/inactive based on the isActive flag
