@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Pautik;
 
@@ -13,25 +11,43 @@ public class ConveyorTrigger : MonoBehaviour
 
 
 
+    // Handles the logic when a collider enters the trigger.
     private void OnTriggerEnter(Collider other)
     {
-        _triggeredItem = Get<ItemManager>.From(other.gameObject);
+        AssignTriggeredItem(Get<ItemManager>.From(other.gameObject));
 
-        if(_triggeredItem == null)
+        bool isTriggeredItemNull = _triggeredItem == null;
+
+        if (isTriggeredItemNull)
         {
             return;
         }
 
-        _triggeredItem.PushItem(_conveyorSegment.Direction);
+        MoveAssignedItem();
     }
 
+    // Handles the logic when a collider exits the trigger.
     private void OnTriggerExit(Collider other)
     {
-        if(_triggeredItem != Get<ItemManager>.From(other.gameObject))
+        bool isTriggeredItemNotEqual = _triggeredItem != Get<ItemManager>.From(other.gameObject);
+
+        if (isTriggeredItemNotEqual)
         {
             return;
         }
 
-        _triggeredItem = null;
+        AssignTriggeredItem(null);
+    }
+
+    // Assigns the triggered item.
+    private void AssignTriggeredItem(ItemManager itemManager)
+    {
+        _triggeredItem = itemManager;
+    }
+
+    // Moves the assigned item using the conveyor segment direction.
+    private void MoveAssignedItem()
+    {
+        _triggeredItem.MoveItem(_conveyorSegment.Direction);
     }
 }

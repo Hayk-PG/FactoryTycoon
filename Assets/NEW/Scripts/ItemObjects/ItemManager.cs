@@ -7,56 +7,85 @@ public class ItemManager : MonoBehaviour
     [Header("Components")]
     [SerializeField] private Rigidbody _rigidbody;
 
-    private bool _isPushed;
+    private bool _isMoved;
 
-    private List<Vector3> _queuedPushes = new List<Vector3>();
-
-
+    private List<Vector3> _queuedMoves = new List<Vector3>();
 
 
-    public void PushItem(Vector3 direction)
+
+
+    /// <summary>
+    /// Moves the item in the specified direction.
+    /// </summary>
+    /// <param name="direction">The direction to move the item.</param>
+    public void MoveItem(Vector3 direction)
     {
-        _queuedPushes.Add(direction);
+        _queuedMoves.Add(direction);
 
-        if (_isPushed)
+        if (_isMoved)
         {
             return;
         }
 
-        StartCoroutine(Test(direction, 4));
+        StartCoroutine(PerformMove(direction, 4));
     }
 
-    private IEnumerator Test(Vector3 direction, float time)
+    // Performs the move towards the target position over a specified time.
+    private IEnumerator PerformMove(Vector3 direction, float time)
     {
-        print(direction);
-        _isPushed = true;
+        // Set the move state to true as the move has been started.
+        SetMoveState(true);
 
+        // Calculate the initial and target positions
         Vector3 initialPosition = _rigidbody.position;
         Vector3 targetPosition = initialPosition + direction;
-        Vector3 currentPosition = Vector3.zero;
+        Vector3 lerpedPosition = Vector3.zero;
 
-        float currentDistance = Vector3.Distance(initialPosition, targetPosition);
+        // Calculate the initial distance and distance threshold
+        float distance = Vector3.Distance(initialPosition, targetPosition);
+        float distanceThreshold = 0.05f;
 
-        print(currentDistance);
-
-        while (currentDistance > 0.05f)
-        {         
-            currentPosition = Vector3.Lerp(_rigidbody.position, targetPosition, time * Time.fixedDeltaTime);
-            currentDistance = Vector3.Distance(_rigidbody.position, targetPosition);
-            _rigidbody.MovePosition(currentPosition);
+        // Move towards the target position while the distance is above the threshold
+        while (distance > distanceThreshold)
+        {
+            // Calculate the lerped position based on the current time and fixed delta time
+            lerpedPosition = Vector3.Lerp(_rigidbody.position, targetPosition, time * Time.fixedDeltaTime);
+            // Update the distance based on the new position
+            distance = Vector3.Distance(_rigidbody.position, targetPosition);
+            MoveToPosition(lerpedPosition);
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
 
+        // Finalize the move towards the target position by directly setting the rigidbody's position to the target position.
         _rigidbody.position = targetPosition;
-        _queuedPushes.RemoveAt(0);
+        // Remove the first queued move as it has been processed.
+        _queuedMoves.RemoveAt(0);
 
-        if(_queuedPushes.Count > 0)
+        // Processes the queued moves and performs the next move if available.
+        bool hasQueuedPushes = _queuedMoves.Count > 0;
+        
+        if (hasQueuedPushes)
         {
-            StartCoroutine(Test(_queuedPushes[0], 2));
+            // Process the remaining queued moves by starting the coroutine.
+            StartCoroutine(PerformMove(_queuedMoves[0], 2));
+
             yield break;
         }
 
-        _isPushed = false;
+        // Set the move state to false as the move has been completed.
+        SetMoveState(false);
+    }
+
+    // Sets the move state of the item.
+    private void SetMoveState(bool isMoved)
+    {
+        _isMoved = isMoved;
+    }
+
+    // Moves the item to the specified position using the rigidbody's MovePosition method.
+    private void MoveToPosition(Vector3 position)
+    {
+        _rigidbody.MovePosition(position);
     }
 }
