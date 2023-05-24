@@ -1,5 +1,6 @@
 using UnityEngine;
 using Pautik;
+using System;
 
 public class ConveyorSegment : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class ConveyorSegment : MonoBehaviour
     public bool IsInputSection => _isInputSection;
     public bool IsOutputSection => _isOutputSection;
 
+    public event Action<ConveyorFunctionType> OnControlConveyorSegment;
+
 
 
 
@@ -40,6 +43,11 @@ public class ConveyorSegment : MonoBehaviour
     {
         // Subscribe to the collection add event
         References.Manager.ConveyorCollection.OnCollectionAdd += OnCollectionAdd;
+    }
+
+    public void RaiseControlConveyorSegmentEvent(ConveyorFunctionType targetFunctionType)
+    {
+        OnControlConveyorSegment?.Invoke(targetFunctionType);
     }
 
     // Get the specified tile position and raise placement validation request
