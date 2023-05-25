@@ -31,6 +31,7 @@ public class ConveyorSegment : MonoBehaviour
 
 
 
+
     private void Start()
     {
         // Perform placement validation, set ID, and add GUI element
@@ -75,7 +76,7 @@ public class ConveyorSegment : MonoBehaviour
     private void CheckConveyorsOnAdjacentSides()
     {
         // Check if there are neighboring conveyors on adjacent sides
-        bool haveConveyorsOnAdjacentSides = HasNeighborConveyer(0) && HasNeighborConveyer(1) || HasNeighborConveyer(2) && HasNeighborConveyer(3);
+        bool haveConveyorsOnAdjacentSides = HasNeighborConveyor(0) && HasNeighborConveyor(1) || HasNeighborConveyor(2) && HasNeighborConveyor(3);
 
         // Set the conveyor base and input/output sections based on adjacent conveyors
         SetConveyorBaseActive(!haveConveyorsOnAdjacentSides);
@@ -87,7 +88,7 @@ public class ConveyorSegment : MonoBehaviour
     /// </summary>
     /// <param name="adjacentPositionIndex">The index of the adjacent position to check (0 for right, 1 for left, 2 for forward, 3 for back).</param>
     /// <returns>True if there is a neighboring conveyor segment, false otherwise.</returns>
-    private bool HasNeighborConveyer(int adjacentPositionIndex)
+    private bool HasNeighborConveyor(int adjacentPositionIndex)
     {
         return Checker.ContainsKey(References.Manager.ConveyorCollection.Dict, AdjacentPositionCalculator.GetAdjacentPositions(transform.position)[adjacentPositionIndex]);
     }
@@ -106,16 +107,19 @@ public class ConveyorSegment : MonoBehaviour
         bool hasOutputSection = isOutputSection.HasValue;
         bool hasInputSection = isInputSection.HasValue;
 
+        // Set the output section if provided and handle conflicts with input section
         if (hasOutputSection)
         {
             if(IsInputSection && isOutputSection.Value)
             {
+                // If it is both an input and output section, return without setting the output section
                 return;
             }
 
             _isOutputSection = isOutputSection.Value;
         }
 
+        // Set the input section if provided
         if (hasInputSection)
         {
             _isInputSection = isInputSection.Value;
@@ -123,13 +127,14 @@ public class ConveyorSegment : MonoBehaviour
     }
 
     /// <summary>
-    /// Set the conveyor direction and corresponding direction vector
+    /// Set the conveyor direction and corresponding direction vector based on the specified ConveyorDirection.
     /// </summary>
-    /// <param name="conveyorDirection"></param>
+    /// <param name="conveyorDirection">The conveyor direction to set.</param>
     public void SetConveyorDirection(ConveyorDirection conveyorDirection)
     {
         _conveyorDirection = conveyorDirection;
 
+        // Set the corresponding direction vector based on the conveyor direction
         switch (conveyorDirection)
         {
             case ConveyorDirection.Right: Direction = Vector3.right; break;
@@ -137,5 +142,49 @@ public class ConveyorSegment : MonoBehaviour
             case ConveyorDirection.Forward: Direction = Vector3.forward; break;
             case ConveyorDirection.Backward: Direction = Vector3.back; break;
         }     
+    }
+
+    /// <summary>
+    /// Set the conveyor direction and corresponding direction vector based on the specified direction vector.
+    /// </summary>
+    /// <param name="direction">The direction vector to set.</param>
+    public void SetConveyorDirection(Vector3 direction)
+    {
+        Direction = direction;
+
+        // Determine the conveyor direction based on the direction vector
+        _conveyorDirection = Direction == Vector3.right ? ConveyorDirection.Right : Direction == Vector3.left ? ConveyorDirection.Left :
+                             Direction == Vector3.forward ? ConveyorDirection.Forward : ConveyorDirection.Backward;             
+    }
+
+    /// <summary>
+    /// Updates the direction of the previous conveyor segment based on the new conveyor segment.
+    /// </summary>
+    /// <param name="previousConveyorSegment">The previous conveyor segment to update.</param>
+    /// <param name="direction">The new direction to set for the previous conveyor segment.</param>
+    public void UpdatePreviousConveyorDirection(ConveyorSegment previousConveyorSegment, Vector3 direction)
+    {
+        // Set the conveyor direction of the previous segment if it exists
+        previousConveyorSegment?.SetConveyorDirection(direction);
+    }
+
+    /// <summary>
+    /// Checks if the conveyor can extend based on the number of neighboring conveyors.
+    /// </summary>
+    /// <returns><c>true</c> if the conveyor can extend; otherwise, <c>false</c>.</returns>
+    public bool CanExtendWithFewNeighbors()
+    {
+        int neighbors = 0;
+
+        for (int i = 0; i < 4; i++)
+        {
+            // Check if there is a neighboring conveyor in the specified direction
+            if (HasNeighborConveyor(i))
+            {
+                neighbors++;
+            }
+        }
+
+        return neighbors < 2;
     }
 }
