@@ -18,7 +18,7 @@ public abstract class MainBehaviour : PhysicsBoxCastAll, IRaySelect, ISpawnableO
     //Events Holders
     OnGroundTilesSpawnUI OnClickSpawnButton;
     SpanwOnTileController OnSpawnTileController;
-    SaveLoadGameobjects OnLoadSavedGameObject;
+    GameObjectsPersistenceManager OnLoadSavedGameObject;
 
     [Header("MESH RENDERER")]
     [SerializeField] protected MeshRenderer[] meshRend;
