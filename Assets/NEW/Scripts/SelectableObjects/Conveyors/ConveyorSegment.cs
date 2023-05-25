@@ -12,6 +12,10 @@ public class ConveyorSegment : MonoBehaviour
     [Header("Conveyor Base Transform")]
     [SerializeField] private Transform _conveyorBase;
 
+    [Header("Linked Conveyor Segments")]
+    [SerializeField] private ConveyorSegment _conveyorSegment1;
+    [SerializeField] private ConveyorSegment _conveyorSegment2;
+
     [Header("Specifications")]
     [SerializeField] private ConveyorDirection _conveyorDirection;
     [SerializeField] private int _id;
@@ -186,5 +190,26 @@ public class ConveyorSegment : MonoBehaviour
         }
 
         return neighbors < 2;
+    }
+
+    /// <summary>
+    /// Links conveyor segments together by assigning them as references to _conveyorSegment1 and _conveyorSegment2.
+    /// If conveyorSegment1 is not null, it is assigned to _conveyorSegment1.
+    /// If conveyorSegment2 is not null, it is assigned to _conveyorSegment2.
+    /// This method is used to establish the connection between conveyor segments.
+    /// </summary>
+    /// <param name="conveyorSegment1">The first conveyor segment to be linked.</param>
+    /// <param name="conveyorSegment2">The second conveyor segment to be linked.</param>
+    public void LinkConveyorSegments(ConveyorSegment conveyorSegment1 = null, ConveyorSegment conveyorSegment2 = null)
+    {
+        if(conveyorSegment1 != null)
+        {
+            _conveyorSegment1 = conveyorSegment1;
+        }
+
+        if(conveyorSegment2 != null)
+        {
+            _conveyorSegment2 = conveyorSegment2;
+        }
     }
 }

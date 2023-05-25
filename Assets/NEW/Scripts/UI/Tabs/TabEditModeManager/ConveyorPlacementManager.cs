@@ -119,10 +119,17 @@ public class ConveyorPlacementManager : MonoBehaviour
             {
                 // Instantiate a new conveyor segment at the spawn position
                 _newConveyorSegment = InstantiateConveyor(spawnPosition);
+                // Set the direction of the new conveyor segment
                 _newConveyorSegment.SetConveyorDirection(direction);
+                // Update the previous conveyor direction of the new conveyor segment
                 _newConveyorSegment.UpdatePreviousConveyorDirection(_hitConveyorSegment, direction);
+                // Update the position of the hit conveyor segment and the spawn position
                 _conveyorHitPosition = _newConveyorSegment.transform.position;
                 _conveyorSpawnPosition = _conveyorHitPosition;
+                // Link the hit conveyor segment to the new conveyor segment
+                _hitConveyorSegment.LinkConveyorSegments(null, _newConveyorSegment);
+                // Link the new conveyor segment to the previous conveyor segment
+                _newConveyorSegment.LinkConveyorSegments(_hitConveyorSegment);
             }
         }
 
