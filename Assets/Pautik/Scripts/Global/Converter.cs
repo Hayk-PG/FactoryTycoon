@@ -4,7 +4,7 @@ namespace Pautik
 {
     public struct Converter
     {
-        public static float AngleConverter(float axis)
+        public static float ConvertAngle(float axis)
         {
             axis = axis > 180 ? axis - 360 : axis;
 
