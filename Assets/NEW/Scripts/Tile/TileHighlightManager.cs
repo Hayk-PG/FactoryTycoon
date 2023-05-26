@@ -3,8 +3,10 @@ using Pautik;
 
 public class TileHighlightManager  : MonoBehaviour
 {
-    [Header("Tile Highlighting")]
+    [Header("Components")]
     [SerializeField] private MeshRenderer _meshRenderer;
+    [SerializeField] private TileOccupancyManager _tileOccupancyManager;
+    [SerializeField] private TileManager _tileManager;
 
     [Header("Colors")]
     [SerializeField] private Color _colorNormal;
@@ -12,14 +14,13 @@ public class TileHighlightManager  : MonoBehaviour
     [SerializeField] private Color _colorHighlighted;
     [SerializeField] private Color _blockedHighlightColor;
 
-    [Header("Tile Occupation Detector")]
-    [SerializeField] private TileOccupancyManager _tileOccupancyManager;
-
     private bool _isEditModeActive;
-    
-    
-    
-    
+
+    public TileManager TileManager => _tileManager;
+
+
+
+
     private void OnEnable()
     {
         // Subscribe to the edit mode event and object placement validation request event
@@ -79,6 +80,18 @@ public class TileHighlightManager  : MonoBehaviour
     {
         _tileOccupancyManager.IsCurrentTileOccupied = isOccupied;
         ResetHighlight();
+    }
+
+    /// <summary>
+    /// Checks whether the specified tile belongs to the same isle as the current tile.
+    /// </summary>
+    /// <param name="tile">The tile to compare.</param>
+    /// <returns>True if the tiles belong to the same isle, false otherwise.</returns>
+    public bool BelongsToSameIsle(TileHighlightManager tile)
+    {
+        // Compare the IsleManager of the specified tile with the IsleManager of the current tile.
+        // If they are the same, it means both tiles belong to the same isle.
+        return tile.TileManager.IsleManager == this.TileManager.IsleManager;
     }
 
     // Change the material color to the specified color

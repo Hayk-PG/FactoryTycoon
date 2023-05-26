@@ -7,10 +7,11 @@ public class ObjectPlacementValidator : MonoBehaviour
 {
     [SerializeField] private Camera _camera;
     [SerializeField] private LayerMask _tileLayerMask;
-    private RaycastHit _hit;
-
+   
     private TileHighlightManager _respondedTile;
+    private IsleManager _isleManager;
     private List<TileHighlightManager> _allRequiredTiles = new List<TileHighlightManager>();
+    private RaycastHit _hit;
     private bool _isResponded;
 
     private Ray Ray => CameraPoint.ScreenPointToRay(_camera, Input.mousePosition);
@@ -59,7 +60,10 @@ public class ObjectPlacementValidator : MonoBehaviour
         }
 
         // Set the new responder tile
-        GetResponderTile(tileHighlightManager);
+        GetRespondedTile(tileHighlightManager);
+
+        // Assign the IsleManager reference from the provided TileHighlightManager
+        AssignIsleManagerFromTile(tileHighlightManager);
 
         // Reset the highlighting of previously required tiles
         ResetPreviouslyRequiredTiles();
@@ -92,11 +96,17 @@ public class ObjectPlacementValidator : MonoBehaviour
         SetTilesOccupied(true);
     }
 
-    // Sets the current responder tile
-    private void GetResponderTile(TileHighlightManager tileHighlightManager)
+    // Sets the current responded tile
+    private void GetRespondedTile(TileHighlightManager tileHighlightManager)
     {
         _respondedTile = tileHighlightManager;
         _isResponded = true;
+    }
+
+    // Assign the IsleManager reference from the provided TileHighlightManager
+    private void AssignIsleManagerFromTile(TileHighlightManager tileHighlightManager)
+    {
+        _isleManager = tileHighlightManager.TileManager.IsleManager;
     }
 
     // Resets the highlighting of previously responded tiles
@@ -142,7 +152,33 @@ public class ObjectPlacementValidator : MonoBehaviour
     // Tries to highlight the required tiles if all requirements are met, otherwise blocks the tiles
     private void TryHighlightTiles(Transform dummy)
     {
-        Conditions<bool>.Compare(_isResponded, ()=> HighlightTiles(dummy), ()=> BlockTiles(dummy));
+        Conditions<bool>.Compare(_isResponded && AreRequiredTilesInSameIsle(), ()=> HighlightTiles(dummy), ()=> BlockTiles(dummy));
+    }
+
+    // Checks if all the required tiles in the list belong to the same isle.
+    private bool AreRequiredTilesInSameIsle()
+    {
+        for (int i = 0; i < _allRequiredTiles.Count; i++)
+        {
+            // Skip the first tile as there is no previous tile to compare with
+            if (i == 0)
+            {
+                continue;
+            }
+
+            // Check if the current tile belongs to the same isle as the previous tile
+            bool bothTilesBelongSameIsle = _allRequiredTiles[i].BelongsToSameIsle(_allRequiredTiles[i - 1]);
+
+            // If the current tile does not belong to the same isle as the previous tile,
+            // return false indicating they are not in the same isle.
+            if (!bothTilesBelongSameIsle)
+            {
+                return false;
+            }
+        }
+
+        // All required tiles belong to the same isle
+        return true;
     }
 
     // Highlights all required tiles
@@ -182,6 +218,7 @@ public class ObjectPlacementValidator : MonoBehaviour
 
         SelectableObjectInfo newObject = Instantiate(selectedObject, _respondedTile.transform.position, Quaternion.identity);
         newObject.ObjectReplacementAnimation.StartReplacementAnimation();
+        newObject.IsleManager = _isleManager;
     }
 
     /// <summary>

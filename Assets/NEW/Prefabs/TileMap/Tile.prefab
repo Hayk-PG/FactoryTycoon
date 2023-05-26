@@ -114,6 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tileOccupancyManager: {fileID: 5197717743289826640}
   _tileHighlightManager: {fileID: 7574609058074088505}
+  _isleManager: {fileID: 0}
 --- !u!114 &5197717743289826640
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,8 +141,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshRenderer: {fileID: 7964541677575241354}
+  _tileOccupancyManager: {fileID: 5197717743289826640}
+  _tileManager: {fileID: 813953515782478395}
   _colorNormal: {r: 0.5764706, g: 0.5764706, b: 0.5764706, a: 1}
   _colorInEditMode: {r: 1, g: 0.8780921, b: 0, a: 1}
   _colorHighlighted: {r: 0, g: 1, b: 0, a: 1}
   _blockedHighlightColor: {r: 1, g: 0, b: 0, a: 1}
-  _tileOccupancyManager: {fileID: 5197717743289826640}
