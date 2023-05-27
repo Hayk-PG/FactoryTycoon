@@ -6,26 +6,26 @@ using Pautik;
 
 [RequireComponent(typeof(Button))]
 
-public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler, IDropHandler, IBeginDragHandler, IEndDragHandler
+public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public enum ButtonClickType { ChangeSprite, ChangeColor, Both, None, OnlyInvokeEvent}
     public ButtonClickType _buttonClickType;
 
-    private Btn[] _siblings;
+    protected Btn[] _siblings;
 
     [SerializeField] private Sprite _sprtPressed;
-    private Sprite _sprtReleased;
+    protected Sprite _sprtReleased;
 
     [SerializeField] private Color _clrPressed;
-    private Color _clrReleased;
+    protected Color _clrReleased;
 
-    private Button Button { get; set; }
-    private Sprite ButtonSprite
+    protected Button Button { get; set; }
+    protected Sprite ButtonSprite
     {
         get => Button.image.sprite;
         set => Button.image.sprite = value;
     }
-    private Color ButtonColor
+    protected Color ButtonColor
     {
         get => Button.image.color;
         set => Button.image.color = value;
@@ -50,31 +50,31 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragH
 
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
         GetButton();
         CacheButtonDefaultLook();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         GetSiblings();
 
         Button.onClick.AddListener(Select);
     }
 
-    private void GetButton()
+    protected virtual void GetButton()
     {
         Button = Get<Button>.From(gameObject);
     }
 
-    private void CacheButtonDefaultLook()
+    protected virtual void CacheButtonDefaultLook()
     {
         _sprtReleased = Button.image.sprite;
         _clrReleased = Button.image.color;
     }
 
-    private void GetSiblings()
+    protected virtual void GetSiblings()
     {
         _siblings = new Btn[transform.parent.childCount - 1];
 
@@ -88,37 +88,37 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragH
         }
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public virtual void OnPointerDown(PointerEventData eventData)
     {
         OnPointerDownHandler?.Invoke();
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public virtual void OnPointerUp(PointerEventData eventData)
     {
         OnPointerUpHandler?.Invoke();
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         OnDragHandler?.Invoke();
     }
 
-    public void OnDrop(PointerEventData eventData)
+    public virtual void OnDrop(PointerEventData eventData)
     {
         OnDropHandler?.Invoke();
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public virtual void OnBeginDrag(PointerEventData eventData)
     {
         OnBeginDragHandler?.Invoke();
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public virtual void OnEndDrag(PointerEventData eventData)
     {
         OnEndDragHandler?.Invoke();
     }
 
-    public void Select()
+    public virtual void Select()
     {
         if (_buttonClickType == ButtonClickType.None)
             return;
@@ -133,7 +133,7 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragH
         }
     }
 
-    private void DeselectAllSiblings()
+    protected virtual void DeselectAllSiblings()
     {
         GlobalFunctions.Loop<Btn>.Foreach(_siblings, sibling =>
         {
@@ -141,7 +141,7 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragH
         });
     }
 
-    public void Deselect()
+    public virtual void Deselect()
     {
         if (IsSelected)
         {
@@ -155,7 +155,7 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragH
         }
     }
 
-    private void ChangeBuutonLook(Sprite sprite, Color color)
+    protected virtual void ChangeBuutonLook(Sprite sprite, Color color)
     {
         switch (_buttonClickType)
         {
@@ -165,7 +165,7 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragH
         }
     }
 
-    private void ChangeSprite(Sprite sprite)
+    protected virtual void ChangeSprite(Sprite sprite)
     {
         if (_sprtPressed == null)
             return;
@@ -173,12 +173,12 @@ public class Btn : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragH
         ButtonSprite = sprite;
     }
 
-    private void ChangeColor(Color color)
+    protected virtual void ChangeColor(Color color)
     {
         ButtonColor = color;
     }
 
-    private void ChangeBoth(Sprite sprite, Color color)
+    protected virtual void ChangeBoth(Sprite sprite, Color color)
     {
         if (_sprtPressed == null)
             return;
