@@ -31,7 +31,7 @@ public class BaseCollection<T,T1> : MonoBehaviour
         OnCollectionAdd?.Invoke(key, value);
     }
 
-    public void Remove(T key)
+    public virtual void Remove(T key, T1 value = default)
     {
         if (!Dict.ContainsKey(key))
         {

@@ -18,4 +18,11 @@ public class SelectableObjectInfo : MonoBehaviour
         set => _isleManager = value;
     }
     public Vector3[] Dimension => _dimension;
+
+
+
+    public void Initialize()
+    {
+        // TODO
+    }
 }
