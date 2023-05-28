@@ -4,13 +4,9 @@ using UnityEngine.UI;
 using Pautik;
 using System;
 
-public class RobotIKManager : MonoBehaviour
+public class RobotJointManager : MonoBehaviour
 {
     private enum AngleState { X, Y, Z }
-
-    [Header("UI Elements")]
-    [SerializeField] private Slider _slider; // Reference to the slider for controlling rotation    
-    [SerializeField] private Btn[] _buttons; // Array of buttons for various actions
 
     [Header("Joint Transform")]
     [SerializeField] private Transform _joint; // Reference to the joint transform to rotate
@@ -31,8 +27,15 @@ public class RobotIKManager : MonoBehaviour
     [SerializeField] private float _minAngle = -50; // Minimum angle for the slider
     [SerializeField] private float _maxAngle = 50; // Maximum angle for the slider
     private float _speed = 50; // Rotation speed
+
+    [Header("Joint Index")]
+    [SerializeField] private int _jointIndex;
+
+    private bool _isJointSelected ;
     private bool _run; // Flag to control joint rotation
     private bool _isStartRotationMatchPassed; // Flag indicating if the start rotation has been matched
+
+    private object[] _data = new object[10];
 
 
 
@@ -40,21 +43,77 @@ public class RobotIKManager : MonoBehaviour
     private void Start()
     {
         SetAngleState();
-        SetSliderValue();
     }
 
     private void OnEnable()
     {
-        // Subscribe to button events
-        _buttons[0].OnSelect += SetStartRotation;
-        _buttons[1].OnSelect += OnSetTargetRotation;
-        _buttons[2].OnSelect += SetDelay;
-        _buttons[3].OnSelect += ToggleRun;
+        References.Manager.RobotTaskManager.OnRobotTask += OnRobotTask;
     }
 
-    private void Update()
+    // Handles the robot task based on the specified task type and data.
+    private void OnRobotTask(RobotTaskType robotTaskType, object[] data)
     {
-        ControlRotationWithSlider();
+        // Check if the robot task is for selecting a joint and handle the joint selection accordingly
+        CheckAndHandleJointSelection(robotTaskType, data);
+
+        // Update the rotation based on the slider value, if the robot task is for getting joint slider values
+        UpdateRotationWithSlider(robotTaskType, data);
+    }
+
+    // Checks if the robot task is for selecting a joint and handles the joint selection accordingly.
+    private void CheckAndHandleJointSelection(RobotTaskType robotTaskType, object[] data)
+    {
+        if (robotTaskType != RobotTaskType.SelectJoint)
+        {
+            return;
+        }
+
+        // Check if the selected joint matches the current joint
+        _isJointSelected = (int)data[0] == _jointIndex;
+
+        if (_isJointSelected )
+        {
+            // Set the joint slider value based on the current joint's local rotation
+            SetJointSliderValue();
+        }
+    }
+
+    // Sets the joint slider value based on the current joint's local rotation.
+    private void SetJointSliderValue()
+    {
+        Quaternion jointLocalRotation = _joint.transform.localRotation;
+        Vector3 jointEulerAngles  = jointLocalRotation.eulerAngles;
+
+        // Prepare the data to be sent for setting the joint slider values
+        _data[0] = _jointIndex; // Joint index
+        _data[1] = _minAngle; // Minimum angle for the slider
+        _data[2] = _maxAngle; // Maximum angle for the slider
+        _data[3] = GetAngle(Angle(jointEulerAngles)); // Current joint angle
+
+        // Raise an event to set the joint slider values
+        References.Manager.RobotTaskManager.RaiseRobotTaskEvent(RobotTaskType.SetJointSliderValues, _data);
+    }
+
+    // Updates the rotation based on the slider value, if the robot task is for getting joint slider values.
+    private void UpdateRotationWithSlider(RobotTaskType robotTaskType, object[] data)
+    {
+        if(robotTaskType != RobotTaskType.GetJointSliderValues)
+        {
+            return;
+        }
+
+        // Check if the rotation can be updated based on the current conditions
+        bool canUpdateRotation  = !_run && _jointIndex == (int)data[0] && _isJointSelected ;
+
+        if (canUpdateRotation )
+        {
+            float sliderValue = (float)data[1]; // Get the slider value
+
+            // Update the rotation based on the slider value
+            UpdateRotation(Rotation(sliderValue));
+
+            _isStartRotationMatchPassed = false;
+        }
     }
 
     // Set angle-related function delegates based on the angle state
@@ -90,17 +149,6 @@ public class RobotIKManager : MonoBehaviour
         }
     }
 
-    // Update the joint rotation based on the slider value
-    private void ControlRotationWithSlider()
-    {
-        if (!_run)
-        {
-            UpdateRotation(Rotation(Mathf.Lerp(_minAngle, _maxAngle, _slider.value)));
-
-            _isStartRotationMatchPassed = false;
-        }
-    }
-
     // Toggle the run flag and start the joint rotation coroutine
     private void ToggleRun()
     {
@@ -117,13 +165,13 @@ public class RobotIKManager : MonoBehaviour
     // Set the target rotation to the current joint rotation
     private void OnSetTargetRotation()
     {
-        _targetRotation = _joint.eulerAngles;
+        _targetRotation = _joint.localEulerAngles;
     }
 
     // Set the start rotation to the current joint rotation
     private void SetStartRotation()
     {
-        _startRotation = _joint.eulerAngles;
+        _startRotation = _joint.localEulerAngles;
     }
 
     // Check and perform joint rotation
@@ -139,8 +187,8 @@ public class RobotIKManager : MonoBehaviour
 
     private void CheckAndPerformJointRotation()
     {
-        bool isRotationMatchStart = _joint.eulerAngles == _startRotation;
-        bool isRotationMatchTarget = _joint.eulerAngles == _targetRotation;
+        bool isRotationMatchStart = _joint.localEulerAngles == _startRotation;
+        bool isRotationMatchTarget = _joint.localEulerAngles == _targetRotation;
 
         CalculateRange(out float range);
 
@@ -156,19 +204,10 @@ public class RobotIKManager : MonoBehaviour
         }
     }
 
-    // Set the slider value based on the current joint rotation
-    private void SetSliderValue()
-    {
-        float currentAngle = GetAngle(_joint.transform.eulerAngles);
-        float value = Mathf.InverseLerp(_minAngle, _maxAngle, currentAngle);
-
-        _slider.value = value;
-    }
-
     // Check if the current joint angle is less than the target angle
     private void RunJointRotation(Vector3 targetRotation, bool stopRotation, bool toggleStartRotationMatch)
     {
-        bool isJointAngleLessThan = IsJointAngleLessThan(Angle(_joint.eulerAngles), Angle(targetRotation));
+        bool isJointAngleLessThan = IsJointAngleLessThan(Angle(_joint.localEulerAngles), Angle(targetRotation));
 
         CalculateAngle(isJointAngleLessThan, out float angle);
         UpdateRotation(Rotation(angle));
@@ -183,7 +222,7 @@ public class RobotIKManager : MonoBehaviour
 
     private void CalculateAngle(bool increaseAngle, out float angle)
     {
-        angle = GetAngle(Angle(_joint.eulerAngles));
+        angle = GetAngle(Angle(_joint.localEulerAngles));
 
         if (increaseAngle)
         {
@@ -203,7 +242,7 @@ public class RobotIKManager : MonoBehaviour
     // Update the joint rotation
     private void UpdateRotation(Vector3 rotation)
     {
-        _joint.eulerAngles = rotation;
+        _joint.localEulerAngles = rotation;
     }
 
     // Toggle the start rotation match flag

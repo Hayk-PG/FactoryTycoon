@@ -16,6 +16,9 @@ public class References : MonoBehaviour
     [Header("Conveyor System Manager")]
     [SerializeField] private ConveyorSystemManager _conveyorSystemManager;
 
+    [Header("Robot Task Manager")]
+    [SerializeField] private RobotTaskManager _robotTaskManager;
+
     // Instance
     public static References Manager { get; private set; }
 
@@ -32,6 +35,9 @@ public class References : MonoBehaviour
 
     // Conveyor System Manager
     public ConveyorSystemManager ConveyorSystemManager => _conveyorSystemManager;
+
+    // Robot Task Manager
+    public RobotTaskManager RobotTaskManager => _robotTaskManager;
 
 
 
