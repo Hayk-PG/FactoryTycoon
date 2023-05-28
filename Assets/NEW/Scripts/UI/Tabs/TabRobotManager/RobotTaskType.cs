@@ -3,5 +3,9 @@ public enum RobotTaskType
 {
     SelectJoint,
     SetJointSliderValues,
-    GetJointSliderValues
+    GetJointSliderValues,
+    SetTargetRotation1,
+    SetTargetRotation2, 
+    SetTargetRotation3,
+    Run
 }

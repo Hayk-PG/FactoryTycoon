@@ -19,9 +19,12 @@ public class RobotJointManager : MonoBehaviour
     private Func<Vector3, Vector3, bool> IsJointAngleLessThan;
     private Func<Vector3, Vector3, Vector3, float> GetRange;
     private Func<float, Vector3> Rotation;
+    private Func<float, Quaternion> EulerRotation;
+    private Func<Vector3, float> EulerAngle;
 
-    private Vector3 _startRotation; // Starting rotation of the joint
-    private Vector3 _targetRotation; // Target rotation of the joint
+    private Quaternion[] _targetRotations = new Quaternion[3];
+
+    private int _targetRotationIndex;
 
     [Header("Angle Limits")]
     [SerializeField] private float _minAngle = -50; // Minimum angle for the slider
@@ -30,6 +33,10 @@ public class RobotJointManager : MonoBehaviour
 
     [Header("Joint Index")]
     [SerializeField] private int _jointIndex;
+
+    private bool _isReversing;
+
+    private bool[] _hasTargetRotationsPassed = new bool[3];
 
     private bool _isJointSelected ;
     private bool _run; // Flag to control joint rotation
@@ -58,6 +65,26 @@ public class RobotJointManager : MonoBehaviour
 
         // Update the rotation based on the slider value, if the robot task is for getting joint slider values
         UpdateRotationWithSlider(robotTaskType, data);
+
+        if(robotTaskType == RobotTaskType.Run)
+        {
+            ToggleRun();
+        }
+
+        if(robotTaskType == RobotTaskType.SetTargetRotation1 && _isJointSelected)
+        {
+            _targetRotations[0] = _joint.localRotation;
+        }
+
+        if (robotTaskType == RobotTaskType.SetTargetRotation2 && _isJointSelected)
+        {
+            _targetRotations[1] = _joint.localRotation;
+        }
+
+        if (robotTaskType == RobotTaskType.SetTargetRotation3 && _isJointSelected)
+        {
+            _targetRotations[2] = _joint.localRotation;
+        }
     }
 
     // Checks if the robot task is for selecting a joint and handles the joint selection accordingly.
@@ -110,8 +137,8 @@ public class RobotJointManager : MonoBehaviour
             float sliderValue = (float)data[1]; // Get the slider value
 
             // Update the rotation based on the slider value
-            UpdateRotation(Rotation(sliderValue));
-
+            //UpdateRotation(Rotation(sliderValue));
+            transform.localRotation = EulerRotation(sliderValue);
             _isStartRotationMatchPassed = false;
         }
     }
@@ -127,6 +154,8 @@ public class RobotJointManager : MonoBehaviour
                 IsJointAngleLessThan = delegate (Vector3 a, Vector3 b) { return a.x < b.x; };
                 GetRange = delegate (Vector3 a, Vector3 b, Vector3 value) { return Mathf.InverseLerp(a.x, b.x, value.x); };
                 Rotation = delegate (float angle) { return new Vector3(angle, 0, 0); };
+                EulerRotation = delegate (float angle) { return Quaternion.Euler(angle, 0, 0); };
+                EulerAngle = delegate (Vector3 eulerAngles) { return eulerAngles.x; };
 
                 break;
 
@@ -136,6 +165,8 @@ public class RobotJointManager : MonoBehaviour
                 IsJointAngleLessThan = delegate (Vector3 a, Vector3 b) { return a.y < b.y; };
                 GetRange = delegate (Vector3 a, Vector3 b, Vector3 value) { return Mathf.InverseLerp(a.y, b.y, value.y); };
                 Rotation = delegate (float angle) { return new Vector3(0, angle, 0); };
+                EulerRotation = delegate (float angle) { return Quaternion.Euler(0, angle, 0); };
+                EulerAngle = delegate (Vector3 eulerAngles) { return eulerAngles.y; };
 
                 break;
             case AngleState.Z:
@@ -144,6 +175,8 @@ public class RobotJointManager : MonoBehaviour
                 IsJointAngleLessThan = delegate (Vector3 a, Vector3 b) { return a.z < b.z; };
                 GetRange = delegate (Vector3 a, Vector3 b, Vector3 value) { return Mathf.InverseLerp(a.z, b.z, value.z); };
                 Rotation = delegate (float angle) { return new Vector3(0, 0, angle); };
+                EulerRotation = delegate (float angle) { return Quaternion.Euler(0, 0, angle); };
+                EulerAngle = delegate (Vector3 eulerAngles) { return eulerAngles.z; };
 
                 break;
         }
@@ -163,15 +196,15 @@ public class RobotJointManager : MonoBehaviour
     }
 
     // Set the target rotation to the current joint rotation
-    private void OnSetTargetRotation()
+    private void SetTargetRotation()
     {
-        _targetRotation = _joint.localEulerAngles;
+        //_targetRotation = _joint.localRotation.eulerAngles;
     }
 
     // Set the start rotation to the current joint rotation
     private void SetStartRotation()
     {
-        _startRotation = _joint.localEulerAngles;
+        //_startRotation = _joint.localRotation.eulerAngles;
     }
 
     // Check and perform joint rotation
@@ -179,45 +212,131 @@ public class RobotJointManager : MonoBehaviour
     {
         while (_run)
         {
-            CheckAndPerformJointRotation();
+            //CheckAndPerformJointRotation();
+
+            yield return StartCoroutine(Test(_targetRotations[_targetRotationIndex]));
+            yield return StartCoroutine(Test(_targetRotations[_targetRotationIndex]));
+            yield return StartCoroutine(Test(_targetRotations[_targetRotationIndex], true));
 
             yield return new WaitForSeconds(Time.fixedDeltaTime);
         }
     }
 
+    private IEnumerator Test(Quaternion targetRotation, bool rotateBack = false)
+    {
+        while (_joint.localRotation != targetRotation)
+        {
+            _joint.localRotation = Quaternion.RotateTowards(_joint.localRotation, targetRotation, _speed * Time.fixedDeltaTime);
+
+            print(_targetRotationIndex);
+
+            yield return new WaitForSeconds(Time.fixedDeltaTime);
+        }
+
+        if(_targetRotationIndex == _targetRotations.Length - 1)
+        {
+            _isReversing = true;
+        }
+        else if(_targetRotationIndex == 0)
+        {
+            _isReversing = false;
+        }
+
+        if (_isReversing)
+        {
+            _targetRotationIndex--;
+        }
+        else
+        {
+            _targetRotationIndex++;
+        }
+
+        yield return new WaitForSeconds(1);
+    }
+
     private void CheckAndPerformJointRotation()
     {
-        bool isRotationMatchStart = _joint.localEulerAngles == _startRotation;
-        bool isRotationMatchTarget = _joint.localEulerAngles == _targetRotation;
+        //float angle = EulerAngle(_joint.localRotation.eulerAngles);
 
-        CalculateRange(out float range);
+        //_joint.localRotation = EulerRotation(angle += _speed * Time.fixedDeltaTime);
 
-        if (!isRotationMatchStart && !_isStartRotationMatchPassed)
+        Quaternion nextRotation;
+
+        if (_joint.localRotation != _targetRotations[0])
         {
-            // Run joint rotation towards start rotation
-            RunJointRotation(Angle(_startRotation), range <= 0.01f, true);
+            if (!_hasTargetRotationsPassed[0])
+            {
+                nextRotation = _targetRotations[0];
+            }
         }
-        else if (!isRotationMatchTarget && _isStartRotationMatchPassed)
+        else
         {
-            // Run joint rotation towards target rotation
-            RunJointRotation(Angle(_targetRotation), range >= 0.99f, false);
+            _hasTargetRotationsPassed[0] = true;
         }
+
+        if (_joint.localRotation != _targetRotations[1])
+        {
+            if (_hasTargetRotationsPassed[0] && !_hasTargetRotationsPassed[1])
+            {
+                nextRotation = _targetRotations[1];
+            }
+        }
+        else
+        {
+            _hasTargetRotationsPassed[1] = true;
+        }
+
+        if (_joint.localRotation == _targetRotations[2])
+        {
+            if (_hasTargetRotationsPassed[1] && !_hasTargetRotationsPassed[2])
+            {
+                nextRotation = _targetRotations[2];
+            }
+        }
+        else
+        {
+            _hasTargetRotationsPassed[2] = true;
+        }
+
+        //_joint.localRotation = Quaternion.RotateTowards(_joint.localRotation, _targetRotation, 10 * Time.fixedDeltaTime);
+
+        
+
+
+
+
+
+        //bool isRotationMatchStart = _joint.localRotation.eulerAngles == _startRotation;
+        //bool isRotationMatchTarget = _joint.localRotation.eulerAngles == _targetRotation;
+
+        //CalculateRange(out float range);
+
+        //if (!isRotationMatchStart && !_isStartRotationMatchPassed)
+        //{
+        //    // Run joint rotation towards start rotation
+        //    RunJointRotation(Angle(_startRotation), range <= 0.01f, true);
+        //}
+        //else if (!isRotationMatchTarget && _isStartRotationMatchPassed)
+        //{
+        //    // Run joint rotation towards target rotation
+        //    RunJointRotation(Angle(_targetRotation), range >= 0.99f, false);
+        //}
     }
 
     // Check if the current joint angle is less than the target angle
     private void RunJointRotation(Vector3 targetRotation, bool stopRotation, bool toggleStartRotationMatch)
     {
-        bool isJointAngleLessThan = IsJointAngleLessThan(Angle(_joint.localEulerAngles), Angle(targetRotation));
+        //bool isJointAngleLessThan = IsJointAngleLessThan(Angle(_joint.localEulerAngles), Angle(targetRotation));
 
-        CalculateAngle(isJointAngleLessThan, out float angle);
-        UpdateRotation(Rotation(angle));
+        //CalculateAngle(isJointAngleLessThan, out float angle);
+        //UpdateRotation(Rotation(angle));
 
-        if (stopRotation)
-        {
-            // Stop rotation at the target angle and toggle the start rotation match flag
-            UpdateRotation(targetRotation);
-            ToggleStartRotationMatch(toggleStartRotationMatch);
-        }
+        //if (stopRotation)
+        //{
+        //    // Stop rotation at the target angle and toggle the start rotation match flag
+        //    UpdateRotation(targetRotation);
+        //    ToggleStartRotationMatch(toggleStartRotationMatch);
+        //}
     }
 
     private void CalculateAngle(bool increaseAngle, out float angle)
@@ -234,10 +353,10 @@ public class RobotJointManager : MonoBehaviour
         }
     }
 
-    private void CalculateRange(out float range)
-    {
-        range = GetRange(Angle(_startRotation), Angle(_targetRotation), Angle(_joint.eulerAngles));
-    }
+    //private void CalculateRange(out float range)
+    //{
+    //    //range = GetRange(Angle(_startRotation), Angle(_targetRotation), Angle(_joint.eulerAngles));
+    //}
 
     // Update the joint rotation
     private void UpdateRotation(Vector3 rotation)

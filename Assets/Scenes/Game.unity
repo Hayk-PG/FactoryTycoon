@@ -288,6 +288,7 @@ GameObject:
   - component: {fileID: 30631580}
   - component: {fileID: 30631579}
   - component: {fileID: 30631581}
+  - component: {fileID: 30631583}
   - component: {fileID: 30631582}
   m_Layer: 5
   m_Name: GameObject
@@ -379,6 +380,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _slider: {fileID: 747887720}
+--- !u!114 &30631583
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30631577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f83d7ef9ded43b429754e54e5727c15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _firstTargetRotationAssignerButton: {fileID: 1384282676}
+  _secondTargetRotationAssignerButton: {fileID: 485108201}
+  _thirdTargetRotationAssignerButton: {fileID: 1964740658}
+  _runButton: {fileID: 1296203426}
 --- !u!1 &30778787
 GameObject:
   m_ObjectHideFlags: 0
@@ -6245,6 +6262,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1141061229}
     m_Modifications:
+    - target: {fileID: 4439742209225539748, guid: fe970f98a23bc4944a89fb6baf69c70b,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 54.55
+      objectReference: {fileID: 0}
     - target: {fileID: 6027077821312898210, guid: fe970f98a23bc4944a89fb6baf69c70b,
         type: 3}
       propertyPath: m_Pivot.x
@@ -6358,7 +6380,7 @@ PrefabInstance:
     - target: {fileID: 8905835267340300371, guid: fe970f98a23bc4944a89fb6baf69c70b,
         type: 3}
       propertyPath: _btnTitle
-      value: Set delay
+      value: Rotation 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe970f98a23bc4944a89fb6baf69c70b, type: 3}
@@ -8283,6 +8305,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1141061229}
     m_Modifications:
+    - target: {fileID: 4439742209225539748, guid: fe970f98a23bc4944a89fb6baf69c70b,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 54.55
+      objectReference: {fileID: 0}
     - target: {fileID: 6027077821312898210, guid: fe970f98a23bc4944a89fb6baf69c70b,
         type: 3}
       propertyPath: m_Pivot.x
@@ -14703,6 +14730,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1141061229}
     m_Modifications:
+    - target: {fileID: 4439742209225539748, guid: fe970f98a23bc4944a89fb6baf69c70b,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 54.55
+      objectReference: {fileID: 0}
     - target: {fileID: 6027077821312898210, guid: fe970f98a23bc4944a89fb6baf69c70b,
         type: 3}
       propertyPath: m_Pivot.x
@@ -14816,7 +14848,7 @@ PrefabInstance:
     - target: {fileID: 8905835267340300371, guid: fe970f98a23bc4944a89fb6baf69c70b,
         type: 3}
       propertyPath: _btnTitle
-      value: Set target position
+      value: Rotation 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe970f98a23bc4944a89fb6baf69c70b, type: 3}
@@ -16360,6 +16392,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1141061229}
     m_Modifications:
+    - target: {fileID: 4439742209225539748, guid: fe970f98a23bc4944a89fb6baf69c70b,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 54.55
+      objectReference: {fileID: 0}
     - target: {fileID: 6027077821312898210, guid: fe970f98a23bc4944a89fb6baf69c70b,
         type: 3}
       propertyPath: m_Pivot.x
@@ -16473,7 +16510,7 @@ PrefabInstance:
     - target: {fileID: 8905835267340300371, guid: fe970f98a23bc4944a89fb6baf69c70b,
         type: 3}
       propertyPath: _btnTitle
-      value: Set start position
+      value: Rotation 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe970f98a23bc4944a89fb6baf69c70b, type: 3}
@@ -16733,7 +16770,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 107711769, guid: 1499a3a7c9fe1514b853088dfc0a0d8f, type: 3}
       propertyPath: _maxAngle
-      value: 359
+      value: 179
       objectReference: {fileID: 0}
     - target: {fileID: 107711769, guid: 1499a3a7c9fe1514b853088dfc0a0d8f, type: 3}
       propertyPath: _buttons.Array.data[0]
@@ -16781,6 +16818,31 @@ PrefabInstance:
       propertyPath: _buttons.Array.data[3]
       value: 
       objectReference: {fileID: 1296203426}
+    - target: {fileID: 578007371347817455, guid: 1499a3a7c9fe1514b853088dfc0a0d8f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 578007371347817455, guid: 1499a3a7c9fe1514b853088dfc0a0d8f,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 578007371347817455, guid: 1499a3a7c9fe1514b853088dfc0a0d8f,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 578007371347817455, guid: 1499a3a7c9fe1514b853088dfc0a0d8f,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 578007371347817455, guid: 1499a3a7c9fe1514b853088dfc0a0d8f,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3056454748533224453, guid: 1499a3a7c9fe1514b853088dfc0a0d8f,
         type: 3}
       propertyPath: _maxAngle
