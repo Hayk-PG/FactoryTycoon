@@ -1,6 +1,8 @@
 
 public enum RobotTaskType 
 {
+    Move,
+    InitializeMoveScreenTarget,
     SelectJoint,
     SetJointSliderValues,
     GetJointSliderValues,
