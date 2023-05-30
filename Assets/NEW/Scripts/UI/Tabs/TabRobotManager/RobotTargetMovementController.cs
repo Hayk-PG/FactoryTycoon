@@ -4,26 +4,24 @@ using Pautik;
 
 public class RobotTargetMovementController : MonoBehaviour
 {
-    [Header("Joysticks")]
-    [SerializeField] private FixedJoystick _movementJoystick;
-    [SerializeField] private FixedJoystick _rotationJoystick;
-
-    [Header("Texts")]
-    [SerializeField] private TMP_Text _robotPositionText;
-    [SerializeField] private TMP_Text _robotRotationText;
-    [SerializeField] private TMP_Text _endEffectorRotationText;
-
-    [Header("Toggle")]
-    [SerializeField] private CustomToggle _toggle;
+    [Header("UI Elements")]
+    [SerializeField] private FixedJoystick _movementJoystick; // Joystick for movement control
+    [SerializeField] private FixedJoystick _rotationJoystick; // Joystick for rotation control
+    [SerializeField] private TMP_Text _robotPositionText; // Text displaying robot position
+    [SerializeField] private TMP_Text _robotRotationText; // Text displaying robot rotation
+    [SerializeField] private TMP_Text _endEffectorRotationText; // Text displaying end effector rotation
+    [SerializeField] private CustomToggle _toggle; // Toggle for end effector rotation control
 
     private bool _isEndEffectorRotationOn = false;
 
     private object[] _data = new object[2];
 
+    // Check if the movement joystick is released (not being used)
     private bool IsMovementJoystickReleased
     {
         get => _movementJoystick.Direction.x < 0.1f && _movementJoystick.Direction.x > -0.1f && _movementJoystick.Direction.y < 0.1f && _movementJoystick.Direction.y > -0.1f;
     }
+    // Check if the rotation joystick is released (not being used)
     private bool IsRotationJoystickReleased
     {
         get => _rotationJoystick.Direction.x > -0.1f && _rotationJoystick.Direction.x < 0.1f;
@@ -36,15 +34,17 @@ public class RobotTargetMovementController : MonoBehaviour
     {
         References.Manager.RobotTaskManager.OnRobotTask += OnRobotTask;
 
+        // Subscribe to the OnValueChange event of the toggle
         _toggle.OnValueChange += isOn => _isEndEffectorRotationOn = isOn;
     }
 
     private void FixedUpdate()
     {
         SendMovementDataToRobot();
-        SendRobotRotationDataToRobot();
+        SendRotationDataToRobot();
     }
 
+    // Event handler for the OnRobotTask event
     private void OnRobotTask(RobotTaskType robotTaskType, object[] data)
     {
         DisplayRobotPosition(robotTaskType, data);
@@ -52,30 +52,35 @@ public class RobotTargetMovementController : MonoBehaviour
         DisplayEndEffectorRotation(robotTaskType, data);
     }
 
+    // Send movement data to the robot based on joystick input
     private void SendMovementDataToRobot()
     {
         if(IsMovementJoystickReleased)
         {
-            return;
+            return; // No movement input, so return
         }
 
         _data[0] = _movementJoystick.Direction;
 
+        // Raise the RobotTask event with the Move task type and movement data
         References.Manager.RobotTaskManager.RaiseRobotTaskEvent(RobotTaskType.Move, _data);
     }
 
-    private void SendRobotRotationDataToRobot()
+    // Send robot rotation data to the robot based on joystick input
+    private void SendRotationDataToRobot()
     {
         if (IsRotationJoystickReleased)
         {
-            return;
+            return; // No rotation input, so return
         }
 
         _data[1] = _rotationJoystick.Direction.x;
 
+        // Raise the RobotTask event with the appropriate task type based on the toggle state
         References.Manager.RobotTaskManager.RaiseRobotTaskEvent(_isEndEffectorRotationOn ? RobotTaskType.RotateEndEffector : RobotTaskType.RotateRobot, _data);
     }
 
+    // Display the robot position in the UI
     private void DisplayRobotPosition(RobotTaskType robotTaskType, object[] data)
     {
         if(robotTaskType != RobotTaskType.ObserveRobotPosition)
@@ -88,27 +93,35 @@ public class RobotTargetMovementController : MonoBehaviour
         _robotPositionText.text = $"Position: {position}";
     }
 
+    // Display the robot rotation in the UI
     private void DisplayRobotRotation(RobotTaskType robotTaskType, object[] data)
     {
         if (robotTaskType != RobotTaskType.ObserveRobotRotation)
         {
-            return;
+            return; // Not observing robot rotation, so return
         }
 
         float angle = (float)data[1];
 
-        _robotRotationText.text = $"Rotation: {Converter.DecimalString(Mathf.RoundToInt(angle))}°";
+        PrintToggleLabelText("Rotation: ", angle);
     }
 
+    // Display the end effector rotation in the UI
     private void DisplayEndEffectorRotation(RobotTaskType robotTaskType, object[] data)
     {
         if (robotTaskType != RobotTaskType.ObservreEndEffectorRotation)
         {
-            return;
+            return; // Not observing end effector rotation, so return
         }
 
         float angle = (float)data[1];
 
-        _robotRotationText.text = $"End Effector Rotation: {Converter.DecimalString(Mathf.RoundToInt(angle))}°";
+        PrintToggleLabelText("End Effector Rotation: ", angle);
+    }
+
+    // Print the toggle label text with the given text and value
+    private void PrintToggleLabelText(string text, float value)
+    {
+        _robotRotationText.text = text + Converter.DecimalString(Mathf.RoundToInt(value));
     }
 }
