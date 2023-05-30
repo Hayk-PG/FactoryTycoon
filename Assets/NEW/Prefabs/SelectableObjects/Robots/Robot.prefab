@@ -103,14 +103,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f5f70a2d3b0aa24185a8373aaec30bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {fileID: 4139178869934624839}
+  _rigTarget: {fileID: 4139178869934624839}
   _robot: {fileID: 4139178868583173024}
-  _minHorizontalPosition: -4
-  _maxHorizontalPosition: -1
-  _minVerticalPosition: -0.8
-  _maxVerticalPosition: 3
-  _fixedDepthPosition: -0.29
+  _minRange: {x: -3, y: -0.08, z: -0.29}
+  _maxRange: {x: -1, y: 2, z: -0.29}
   _checkPoints: []
+  _speed: 3
 --- !u!1 &4139178869108415915
 GameObject:
   m_ObjectHideFlags: 0

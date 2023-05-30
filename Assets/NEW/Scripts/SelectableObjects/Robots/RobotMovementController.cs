@@ -15,60 +15,65 @@ public class RobotMovementController : MonoBehaviour
     }
 
     [Header("Transforms")]
-    [SerializeField] private Transform _target; // Transform of the target object
-    [SerializeField] private Transform _robot; // Transform of the robot object
+    [SerializeField] private Transform _rigTarget;
+    [SerializeField] private Transform _robot; 
 
     [Header("Position Limits")]
-    [SerializeField] private float _minHorizontalPosition = -4f; // Minimum horizontal position for the target
-    [SerializeField] private float _maxHorizontalPosition = -1f; // Maximum horizontal position for the target
-    [SerializeField] private float _minVerticalPosition = -0.8f; // Minimum vertical position for the target
-    [SerializeField] private float _maxVerticalPosition = 3f; // Maximum vertical position for the target
-    [SerializeField] private float _fixedDepthPosition = -0.29f; // Fixed depth position for the target
+    [SerializeField] private Vector3 _minRange;
+    [SerializeField] private Vector3 _maxRange;
+    private Vector2 _movementDirection;   
+    private Vector3 _movementVelocity;
+    private Vector3 _desiredPosition;
 
     [Header("Checkpoints")]
-    [SerializeField] private List<CheckPointData> _checkPoints = new List<CheckPointData>(); // List of checkpoints for the robot
+    [SerializeField] private List<CheckPointData> _checkPoints = new List<CheckPointData>();
 
-    private object[] _data = new object[2]; // Data array for sending to the RobotTaskManager
+    [Header("Speed")]
+    [SerializeField] private float _speed;
+    private float _rotationDirection;
 
 
 
-
-    private void Start()
-    {
-        InitializeMoveScreenTarget();
-    }
 
     private void OnEnable()
     {
         References.Manager.RobotTaskManager.OnRobotTask += OnRobotTask;
     }
 
-    // Initializes the movement of the target on the screen.
-    private void InitializeMoveScreenTarget()
-    {
-        _data[0] = Mathf.InverseLerp(_minHorizontalPosition, _maxHorizontalPosition, _target.localPosition.x);
-        _data[1] = Mathf.InverseLerp(_minVerticalPosition, _maxVerticalPosition, _target.localPosition.y);
-
-        References.Manager.RobotTaskManager.RaiseRobotTaskEvent(RobotTaskType.InitializeMoveScreenTarget, _data);
-    }
-
-    // Handles the robot task received from the RobotTaskManager.
     private void OnRobotTask(RobotTaskType robotTaskType, object[] data)
     {
-        UpdateRobotPositionWithMoveScreen(robotTaskType, data);
+        UpdateRigTargetPosition(robotTaskType, data);
+        UpdateRobotRotation(robotTaskType, data);
     }
 
-    // Updates the robot's position based on the movement of the target on the screen.
-    private void UpdateRobotPositionWithMoveScreen(RobotTaskType robotTaskType, object[] data)
+    private void UpdateRigTargetPosition(RobotTaskType robotTaskType, object[] data)
     {
-        if (robotTaskType == RobotTaskType.Move)
+        if(robotTaskType != RobotTaskType.Move)
         {
-            Vector2 normalizedPosition = (Vector2)data[0];
-
-            float x = Mathf.Lerp(_minHorizontalPosition, _maxHorizontalPosition, normalizedPosition.x);
-            float y = Mathf.Lerp(_minVerticalPosition, _maxVerticalPosition, normalizedPosition.y);
-
-            _target.localPosition = new Vector3(x, y, _fixedDepthPosition);
+            return;
         }
+
+        _movementDirection = (Vector2)data[0];
+        _movementVelocity = _movementDirection * _speed * Time.fixedDeltaTime;
+
+        _desiredPosition.x = _desiredPosition.x > _maxRange.x ? _maxRange.x : _desiredPosition.x < _minRange.x ? _minRange.x : (_rigTarget.localPosition + _movementVelocity).x;
+        _desiredPosition.y = _desiredPosition.y > _maxRange.y ? _maxRange.y : _desiredPosition.y < _minRange.y ? _minRange.y : (_rigTarget.localPosition + _movementVelocity).y;
+        _desiredPosition.z = _maxRange.z;
+
+        _rigTarget.localPosition = _desiredPosition;
+    }
+
+    private void UpdateRobotRotation(RobotTaskType robotTaskType, object[] data)
+    {
+        if(robotTaskType != RobotTaskType.Rotate)
+        {
+            return;
+        }
+
+        _rotationDirection = (float)data[1];
+
+        float angle = 30f * _rotationDirection * _speed * Time.fixedDeltaTime;
+
+        _robot.Rotate(Vector3.up, angle);
     }
 }
