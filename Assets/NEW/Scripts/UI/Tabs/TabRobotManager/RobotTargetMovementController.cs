@@ -1,9 +1,22 @@
 using UnityEngine;
+using TMPro;
+using Pautik;
 
-public class RobotTargetMovementController    : MonoBehaviour
+public class RobotTargetMovementController : MonoBehaviour
 {
+    [Header("Joysticks")]
     [SerializeField] private FixedJoystick _movementJoystick;
     [SerializeField] private FixedJoystick _rotationJoystick;
+
+    [Header("Texts")]
+    [SerializeField] private TMP_Text _robotPositionText;
+    [SerializeField] private TMP_Text _robotRotationText;
+    [SerializeField] private TMP_Text _endEffectorRotationText;
+
+    [Header("Toggle")]
+    [SerializeField] private CustomToggle _toggle;
+
+    private bool _isEndEffectorRotationOn = false;
 
     private object[] _data = new object[2];
 
@@ -19,10 +32,24 @@ public class RobotTargetMovementController    : MonoBehaviour
 
 
 
+    private void OnEnable()
+    {
+        References.Manager.RobotTaskManager.OnRobotTask += OnRobotTask;
+
+        _toggle.OnValueChange += isOn => _isEndEffectorRotationOn = isOn;
+    }
+
     private void FixedUpdate()
     {
         SendMovementDataToRobot();
-        SendRotationDataToRobot();
+        SendRobotRotationDataToRobot();
+    }
+
+    private void OnRobotTask(RobotTaskType robotTaskType, object[] data)
+    {
+        DisplayRobotPosition(robotTaskType, data);
+        DisplayRobotRotation(robotTaskType, data);
+        DisplayEndEffectorRotation(robotTaskType, data);
     }
 
     private void SendMovementDataToRobot()
@@ -37,7 +64,7 @@ public class RobotTargetMovementController    : MonoBehaviour
         References.Manager.RobotTaskManager.RaiseRobotTaskEvent(RobotTaskType.Move, _data);
     }
 
-    private void SendRotationDataToRobot()
+    private void SendRobotRotationDataToRobot()
     {
         if (IsRotationJoystickReleased)
         {
@@ -46,6 +73,42 @@ public class RobotTargetMovementController    : MonoBehaviour
 
         _data[1] = _rotationJoystick.Direction.x;
 
-        References.Manager.RobotTaskManager.RaiseRobotTaskEvent(RobotTaskType.Rotate, _data);
+        References.Manager.RobotTaskManager.RaiseRobotTaskEvent(_isEndEffectorRotationOn ? RobotTaskType.RotateEndEffector : RobotTaskType.RotateRobot, _data);
+    }
+
+    private void DisplayRobotPosition(RobotTaskType robotTaskType, object[] data)
+    {
+        if(robotTaskType != RobotTaskType.ObserveRobotPosition)
+        {
+            return;
+        }
+
+        Vector2 position = (Vector2)data[0];
+
+        _robotPositionText.text = $"Position: {position}";
+    }
+
+    private void DisplayRobotRotation(RobotTaskType robotTaskType, object[] data)
+    {
+        if (robotTaskType != RobotTaskType.ObserveRobotRotation)
+        {
+            return;
+        }
+
+        float angle = (float)data[1];
+
+        _robotRotationText.text = $"Rotation: {Converter.DecimalString(Mathf.RoundToInt(angle))}°";
+    }
+
+    private void DisplayEndEffectorRotation(RobotTaskType robotTaskType, object[] data)
+    {
+        if (robotTaskType != RobotTaskType.ObservreEndEffectorRotation)
+        {
+            return;
+        }
+
+        float angle = (float)data[1];
+
+        _robotRotationText.text = $"End Effector Rotation: {Converter.DecimalString(Mathf.RoundToInt(angle))}°";
     }
 }

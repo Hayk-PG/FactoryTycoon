@@ -16,7 +16,7 @@ public class RobotMovementController : MonoBehaviour
 
     [Header("Transforms")]
     [SerializeField] private Transform _rigTarget;
-    [SerializeField] private Transform _robot; 
+    [SerializeField] private Transform _robot;
 
     [Header("Position Limits")]
     [SerializeField] private Vector3 _minRange;
@@ -32,6 +32,7 @@ public class RobotMovementController : MonoBehaviour
     [SerializeField] private float _speed;
     private float _rotationDirection;
 
+    private object[] _data = new object[3];
 
 
 
@@ -44,6 +45,7 @@ public class RobotMovementController : MonoBehaviour
     {
         UpdateRigTargetPosition(robotTaskType, data);
         UpdateRobotRotation(robotTaskType, data);
+        UpdateRigTargetRotation(robotTaskType, data);
     }
 
     private void UpdateRigTargetPosition(RobotTaskType robotTaskType, object[] data)
@@ -61,11 +63,13 @@ public class RobotMovementController : MonoBehaviour
         _desiredPosition.z = _maxRange.z;
 
         _rigTarget.localPosition = _desiredPosition;
+
+        ShareRobotPosition(_rigTarget.localPosition);
     }
 
     private void UpdateRobotRotation(RobotTaskType robotTaskType, object[] data)
     {
-        if(robotTaskType != RobotTaskType.Rotate)
+        if(robotTaskType != RobotTaskType.RotateRobot)
         {
             return;
         }
@@ -75,5 +79,44 @@ public class RobotMovementController : MonoBehaviour
         float angle = 30f * _rotationDirection * _speed * Time.fixedDeltaTime;
 
         _robot.Rotate(Vector3.up, angle);
+
+        ShareRobotRotationAngle(_robot.rotation.eulerAngles.y);
+    }
+
+    private void UpdateRigTargetRotation(RobotTaskType robotTaskType, object[] data)
+    {
+        if (robotTaskType != RobotTaskType.RotateEndEffector)
+        {
+            return;
+        }
+
+        _rotationDirection = (float)data[1];
+
+        float angle = 15f * _rotationDirection * _speed * Time.fixedDeltaTime;
+
+        _rigTarget.Rotate(Vector3.forward, angle);
+
+        ShareEndEffectorRotationAngle(_rigTarget.rotation.eulerAngles.y);
+    }
+
+    private void ShareRobotPosition(Vector2 position)
+    {
+        _data[0] = position;
+
+        References.Manager.RobotTaskManager.RaiseRobotTaskEvent(RobotTaskType.ObserveRobotPosition, _data);
+    }
+
+    private void ShareRobotRotationAngle(float angle)
+    {
+        _data[1] = angle;
+
+        References.Manager.RobotTaskManager.RaiseRobotTaskEvent(RobotTaskType.ObserveRobotRotation, _data);
+    }
+
+    private void ShareEndEffectorRotationAngle(float angle)
+    {
+        _data[1] = angle;
+
+        References.Manager.RobotTaskManager.RaiseRobotTaskEvent(RobotTaskType.ObservreEndEffectorRotation, _data);
     }
 }

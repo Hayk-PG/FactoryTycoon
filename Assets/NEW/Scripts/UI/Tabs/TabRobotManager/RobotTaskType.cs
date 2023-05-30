@@ -2,7 +2,11 @@
 public enum RobotTaskType 
 {
     Move,
-    Rotate,
+    RotateRobot,
+    RotateEndEffector,
+    ObserveRobotPosition,
+    ObserveRobotRotation,
+    ObservreEndEffectorRotation,
     InitializeMoveScreenTarget,
     SelectJoint,
     SetJointSliderValues,
